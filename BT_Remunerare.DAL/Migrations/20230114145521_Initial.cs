@@ -10,7 +10,7 @@ namespace BTRemunerare.DAL.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "Products",
                 columns: table => new
                 {
@@ -20,10 +20,10 @@ namespace BTRemunerare.DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Products", x => x.ProductId);
+                    _ = table.PrimaryKey("PK_Products", x => x.ProductId);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "Vendors",
                 columns: table => new
                 {
@@ -33,10 +33,10 @@ namespace BTRemunerare.DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Vendors", x => x.VendorId);
+                    _ = table.PrimaryKey("PK_Vendors", x => x.VendorId);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "SalesRemunerationRules",
                 columns: table => new
                 {
@@ -49,8 +49,8 @@ namespace BTRemunerare.DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SalesRemunerationRules", x => x.RemunerationId);
-                    table.ForeignKey(
+                    _ = table.PrimaryKey("PK_SalesRemunerationRules", x => x.RemunerationId);
+                    _ = table.ForeignKey(
                         name: "FK_SalesRemunerationRules_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
@@ -58,7 +58,7 @@ namespace BTRemunerare.DAL.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "Sales",
                 columns: table => new
                 {
@@ -72,14 +72,14 @@ namespace BTRemunerare.DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Sales", x => x.SaleId);
-                    table.ForeignKey(
+                    _ = table.PrimaryKey("PK_Sales", x => x.SaleId);
+                    _ = table.ForeignKey(
                         name: "FK_Sales_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "ProductId",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
+                    _ = table.ForeignKey(
                         name: "FK_Sales_Vendors_VendorId",
                         column: x => x.VendorId,
                         principalTable: "Vendors",
@@ -87,17 +87,17 @@ namespace BTRemunerare.DAL.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_Sales_ProductId",
                 table: "Sales",
                 column: "ProductId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_Sales_VendorId",
                 table: "Sales",
                 column: "VendorId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_SalesRemunerationRules_ProductId",
                 table: "SalesRemunerationRules",
                 column: "ProductId");
@@ -106,16 +106,16 @@ namespace BTRemunerare.DAL.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "Sales");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "SalesRemunerationRules");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "Vendors");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "Products");
         }
     }

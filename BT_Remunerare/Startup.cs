@@ -20,12 +20,12 @@ namespace BT_Remunerare
             RegisterServices(services);
 
             string connectionString = Configuration.GetSection("AppSettings")["DatabaseConnection"];
-            services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(connectionString));
-            services.AddAuthentication(IISDefaults.AuthenticationScheme);
-            services.AddMvc();
-            services.AddHttpContextAccessor();
-            services.AddControllersWithViews();
-            services.AddSwaggerGen(c =>
+            _ = services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(connectionString));
+            _ = services.AddAuthentication(IISDefaults.AuthenticationScheme);
+            _ = services.AddMvc();
+            _ = services.AddHttpContextAccessor();
+            _ = services.AddControllersWithViews();
+            _ = services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "BT_Remunerare API", Version = "v1" });
                 c.UseInlineDefinitionsForEnums();
@@ -33,7 +33,7 @@ namespace BT_Remunerare
         }
         private void RegisterServices(IServiceCollection services)
         {
-            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+            _ = services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
             RegisterDALDependencies(services);
             RegisterBLDependencies(services);
