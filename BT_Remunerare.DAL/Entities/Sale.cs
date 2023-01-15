@@ -7,10 +7,8 @@ namespace BT_Remunerare.DAL.Entities
     {
         [Key]
         public int SaleId { get; set; }
-        [Required]
-        public int Year { get; set; }
-        [Required]
-        public int Month { get; set; }
+        [ForeignKey("Period")]
+        public int PeriodId { get; set; }
         [ForeignKey("Vendor")]
         public int VendorId { get; set; }
         [ForeignKey("Product")]
@@ -20,6 +18,7 @@ namespace BT_Remunerare.DAL.Entities
         public Vendor? SaleVendor { get; set; }
 
         public Product? SaleProduct { get; set; }
+        public Period? SalePeriod { get; set; }
 
     }
 }
