@@ -11,7 +11,5 @@
 
         public ProductDTO? SaleProduct { get; set; }
         public PeriodDTO? SalePeriod { get; set; }
-
-
     }
 }

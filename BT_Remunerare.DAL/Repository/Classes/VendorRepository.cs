@@ -1,6 +1,8 @@
 ﻿using BT_Remunerare.DAL.Entities;
 using BT_Remunerare.DAL.Repository.Interfaces;
+using BT_Remunerare.TL.Common;
 using BT_Remunerare.TL.DTO;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BT_Remunerare.DAL.Repository.Classes
 {
@@ -13,23 +15,41 @@ namespace BT_Remunerare.DAL.Repository.Classes
             _applicationDBContext = applicationDBContext;
         }
 
-        public void AddVendor(VendorDTO vendorDTO)
+        public Response AddVendor(VendorDTO vendorDTO)
         {
-            Vendor newVendor = new()
+            try
             {
-                VendorName = vendorDTO.VendorName,
-            };
-            _ = _applicationDBContext.Vendors.Add(newVendor);
-            _ = _applicationDBContext.SaveChanges();
+                Vendor newVendor = new()
+                {
+                    VendorName = vendorDTO.VendorName,
+                };
+                _ = _applicationDBContext.Vendors.Add(newVendor);
+                _ = _applicationDBContext.SaveChanges();
+                return new Response { IsSuccesful = true };
+            }
+            catch (Exception ex)
+            {
+                return new Response { IsSuccesful = false, ErrorMessage = ex.Message };
+            }
         }
 
-        public void DeleteVendor(int vendorId)
+        public Response DeleteVendor(int vendorId)
         {
-            Vendor vendorById = _applicationDBContext.Vendors.FirstOrDefault(x => x.VendorId == vendorId);
-            if (vendorById != null)
+            try
             {
-                _ = _applicationDBContext.Vendors.Remove(vendorById);
-                _ = _applicationDBContext.SaveChanges();
+                Vendor vendorById = _applicationDBContext.Vendors.FirstOrDefault(x => x.VendorId == vendorId);
+                if (vendorById != null)
+
+                {
+                    _ = _applicationDBContext.Vendors.Remove(vendorById);
+                    _ = _applicationDBContext.SaveChanges();
+                    return new Response { IsSuccesful = true };
+                }
+                return new Response { IsSuccesful = false, ErrorMessage = $"No vendor with vendor id {vendorId} was found" };
+            }
+            catch (Exception ex)
+            {
+                return new Response { IsSuccesful = false, ErrorMessage = ex.Message };
             }
         }
 
@@ -55,13 +75,24 @@ namespace BT_Remunerare.DAL.Repository.Classes
                 };
         }
 
-        public void UpdateVendor(VendorDTO vendorDTO)
+        public Response UpdateVendor(VendorDTO vendorDTO)
         {
-            Vendor vendorById = _applicationDBContext.Vendors.FirstOrDefault(x => x.VendorId == vendorDTO.VendorId);
-            if (vendorById != null)
+            try
             {
-                vendorById.VendorName = vendorDTO.VendorName;
-                _ = _applicationDBContext.SaveChanges();
+                Vendor vendorById = _applicationDBContext.Vendors.FirstOrDefault(x => x.VendorId == vendorDTO.VendorId);
+
+                if (vendorById != null)
+                {
+                    vendorById.VendorName = (vendorById.VendorName == vendorDTO.VendorName) || vendorDTO.VendorName.IsNullOrEmpty() ? vendorById.VendorName : vendorDTO.VendorName;
+                    _ = _applicationDBContext.SaveChanges();
+                    return new Response { IsSuccesful = true };
+                }
+                return new Response { IsSuccesful = false, ErrorMessage = $"No vendor with vendor id {vendorDTO.VendorId} was found" };
+
+            }
+            catch (Exception ex)
+            {
+                return new Response { IsSuccesful = false, ErrorMessage = ex.Message };
             }
         }
     }

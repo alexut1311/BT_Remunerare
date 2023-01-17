@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BT_Remunerare.DAL\BT_Remunerare.DAL.csproj" />
+    <ProjectReference Include="..\BT_Remunerare.TL\BT_Remunerare.TL.csproj" />
+  </ItemGroup>
+
 </Project>
