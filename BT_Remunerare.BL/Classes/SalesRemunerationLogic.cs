@@ -20,6 +20,10 @@ namespace BT_Remunerare.BL.Classes
 
         public void DeleteSalesRemuneration(int salesRemunerationId)
         {
+            if (salesRemunerationId == 0)
+            {
+                return;
+            }
             _salesRemunerationRepository.DeleteSalesRemuneration(salesRemunerationId);
         }
 
@@ -28,9 +32,9 @@ namespace BT_Remunerare.BL.Classes
             return _salesRemunerationRepository.GetAllSalesRemunerationRules();
         }
 
-        public SalesRemunerationRuleDTO GetSalesRemunerationById(int salesRemunerationId)
+        public SalesRemunerationRuleDTO? GetSalesRemunerationById(int salesRemunerationId)
         {
-            return _salesRemunerationRepository.GetSalesRemunerationById(salesRemunerationId);
+            return salesRemunerationId == 0 ? null : _salesRemunerationRepository.GetSalesRemunerationById(salesRemunerationId);
         }
 
         public void UpdateSalesRemuneration(SalesRemunerationRuleDTO salesRemunerationDTO)

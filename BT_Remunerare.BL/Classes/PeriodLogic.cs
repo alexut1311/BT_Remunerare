@@ -19,6 +19,10 @@ namespace BT_Remunerare.BL.Classes
 
         public void DeletePeriod(int periodId)
         {
+            if (periodId == 0)
+            {
+                return;
+            }
             _periodRepository.DeletePeriod(periodId);
         }
 
@@ -34,7 +38,7 @@ namespace BT_Remunerare.BL.Classes
 
         public PeriodDTO? GetPeriodById(int periodId)
         {
-            return _periodRepository.GetPeriodById(periodId);
+            return periodId == 0 ? null : _periodRepository.GetPeriodById(periodId);
         }
 
         public void UpdatePeriod(PeriodDTO periodDTO)

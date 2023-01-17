@@ -20,6 +20,10 @@ namespace BT_Remunerare.BL.Classes
 
         public void DeleteVendor(int vendorId)
         {
+            if (vendorId == 0)
+            {
+                return;
+            }
             _vendorRepository.DeleteVendor(vendorId);
         }
 
@@ -30,7 +34,7 @@ namespace BT_Remunerare.BL.Classes
 
         public VendorDTO? GetVendorById(int vendorId)
         {
-            return _vendorRepository.GetVendorById(vendorId);
+            return vendorId == 0 ? null : _vendorRepository.GetVendorById(vendorId);
         }
 
         public void UpdateVendor(VendorDTO vendorDTO)

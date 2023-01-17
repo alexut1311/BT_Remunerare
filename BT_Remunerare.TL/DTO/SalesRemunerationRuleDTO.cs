@@ -6,9 +6,7 @@
         public int PeriodId { get; set; }
         public int ProductId { get; set; }
         public int Remuneration { get; set; }
-        public ProductDTO? RemunerationProduct { get; set; }
+        public ProductDTO? SalesRemunerationProduct { get; set; }
         public PeriodDTO? SalesRemunerationPeriod { get; set; }
-
-
     }
 }

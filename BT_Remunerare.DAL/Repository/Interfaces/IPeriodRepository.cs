@@ -1,13 +1,14 @@
-﻿using BT_Remunerare.TL.DTO;
+﻿using BT_Remunerare.TL.Common;
+using BT_Remunerare.TL.DTO;
 
 namespace BT_Remunerare.DAL.Repository.Interfaces
 {
     public interface IPeriodRepository
     {
-        void AddPeriod(PeriodDTO saleDTO);
+        Response AddPeriod(PeriodDTO saleDTO);
         PeriodDTO? GetPeriodById(int saleId);
-        void UpdatePeriod(PeriodDTO saleDTO);
-        void DeletePeriod(int saleId);
+        Response UpdatePeriod(PeriodDTO saleDTO);
+        Response DeletePeriod(int saleId);
         IList<PeriodDTO> GetAllPeriods();
         IList<PeriodDTO> GetAllPeriodsWithSalesAndRemuneration();
     }

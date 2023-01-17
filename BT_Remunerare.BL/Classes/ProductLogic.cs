@@ -20,6 +20,10 @@ namespace BT_Remunerare.BL.Classes
 
         public void DeleteProduct(int productId)
         {
+            if (productId == 0)
+            {
+                return;
+            }
             _productRepository.DeleteProduct(productId);
         }
 
@@ -30,7 +34,7 @@ namespace BT_Remunerare.BL.Classes
 
         public ProductDTO? GetProductById(int productId)
         {
-            return _productRepository.GetProductById(productId);
+            return productId == 0 ? null : _productRepository.GetProductById(productId);
         }
 
         public void UpdateProduct(ProductDTO productDTO)

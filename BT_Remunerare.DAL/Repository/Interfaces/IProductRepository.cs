@@ -1,14 +1,15 @@
-﻿using BT_Remunerare.TL.DTO;
+﻿using BT_Remunerare.TL.Common;
+using BT_Remunerare.TL.DTO;
 
 namespace BT_Remunerare.DAL.Repository.Interfaces
 {
     public interface IProductRepository
     {
-        void AddProduct(ProductDTO productDTO);
+        Response AddProduct(ProductDTO productDTO);
         ProductDTO? GetProductById(int productId);
 
-        void UpdateProduct(ProductDTO productDTO);
-        void DeleteProduct(int productId);
+        Response UpdateProduct(ProductDTO productDTO);
+        Response DeleteProduct(int productId);
         IList<ProductDTO> GetAllProducts();
     }
 }

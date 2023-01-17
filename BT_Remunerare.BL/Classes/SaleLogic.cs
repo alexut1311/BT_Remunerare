@@ -20,6 +20,10 @@ namespace BT_Remunerare.BL.Classes
 
         public void DeleteSale(int saleId)
         {
+            if (saleId == 0)
+            {
+                return;
+            }
             _saleRepository.DeleteSale(saleId);
         }
 
@@ -30,7 +34,7 @@ namespace BT_Remunerare.BL.Classes
 
         public SaleDTO? GetSaleById(int saleId)
         {
-            return _saleRepository.GetSaleById(saleId);
+            return saleId == 0 ? null : _saleRepository.GetSaleById(saleId);
         }
 
         public void UpdateSale(SaleDTO saleDTO)

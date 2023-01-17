@@ -1,6 +1,8 @@
 ﻿using BT_Remunerare.DAL.Entities;
 using BT_Remunerare.DAL.Repository.Interfaces;
+using BT_Remunerare.TL.Common;
 using BT_Remunerare.TL.DTO;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BT_Remunerare.DAL.Repository.Classes
 {
@@ -13,23 +15,41 @@ namespace BT_Remunerare.DAL.Repository.Classes
             _applicationDBContext = applicationDBContext;
         }
 
-        public void AddProduct(ProductDTO productDTO)
+        public Response AddProduct(ProductDTO productDTO)
         {
-            Product newProduct = new()
+            try
             {
-                ProductName = productDTO.ProductName,
-            };
-            _ = _applicationDBContext.Products.Add(newProduct);
-            _ = _applicationDBContext.SaveChanges();
+                Product newProduct = new()
+                {
+                    ProductName = productDTO.ProductName,
+                };
+                _ = _applicationDBContext.Products.Add(newProduct);
+                _ = _applicationDBContext.SaveChanges();
+                return new Response { IsSuccesful = true };
+            }
+            catch (Exception ex)
+            {
+                return new Response { IsSuccesful = false, ErrorMessage = ex.Message };
+            }
         }
 
-        public void DeleteProduct(int productId)
+        public Response DeleteProduct(int productId)
         {
-            Product productById = _applicationDBContext.Products.FirstOrDefault(x => x.ProductId == productId);
-            if (productById != null)
+            try
             {
-                _ = _applicationDBContext.Products.Remove(productById);
-                _ = _applicationDBContext.SaveChanges();
+                Product productById = _applicationDBContext.Products.FirstOrDefault(x => x.ProductId == productId);
+                if (productById != null)
+                {
+                    _ = _applicationDBContext.Products.Remove(productById);
+                    _ = _applicationDBContext.SaveChanges();
+                    return new Response { IsSuccesful = true };
+                }
+                return new Response { IsSuccesful = false, ErrorMessage = $"No product with product id {productId} was found" };
+
+            }
+            catch (Exception ex)
+            {
+                return new Response { IsSuccesful = false, ErrorMessage = ex.Message };
             }
         }
 
@@ -55,13 +75,22 @@ namespace BT_Remunerare.DAL.Repository.Classes
                 };
         }
 
-        public void UpdateProduct(ProductDTO productDTO)
+        public Response UpdateProduct(ProductDTO productDTO)
         {
-            Product productById = _applicationDBContext.Products.FirstOrDefault(x => x.ProductId == productDTO.ProductId);
-            if (productById != null)
+            try
             {
-                productById.ProductName = productDTO.ProductName;
-                _ = _applicationDBContext.SaveChanges();
+                Product productById = _applicationDBContext.Products.FirstOrDefault(x => x.ProductId == productDTO.ProductId);
+                if (productById != null)
+                {
+                    productById.ProductName = (productById.ProductName == productDTO.ProductName) || productDTO.ProductName.IsNullOrEmpty() ? productById.ProductName : productDTO.ProductName;
+                    _ = _applicationDBContext.SaveChanges();
+                    return new Response { IsSuccesful = true };
+                }
+                return new Response { IsSuccesful = false, ErrorMessage = $"No product with product id {productDTO.ProductId} was found" };
+            }
+            catch (Exception ex)
+            {
+                return new Response { IsSuccesful = false, ErrorMessage = ex.Message };
             }
         }
     }

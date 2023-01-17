@@ -1,5 +1,6 @@
 ﻿using BT_Remunerare.DAL.Entities;
 using BT_Remunerare.DAL.Repository.Interfaces;
+using BT_Remunerare.TL.Common;
 using BT_Remunerare.TL.DTO;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,24 +15,41 @@ namespace BT_Remunerare.DAL.Repository.Classes
             _applicationDBContext = applicationDBContext;
         }
 
-        public void AddPeriod(PeriodDTO periodDTO)
+        public Response AddPeriod(PeriodDTO periodDTO)
         {
-            Period newPeriod = new()
+            try
             {
-                Year = periodDTO.Year,
-                Month = periodDTO.Month,
-            };
-            _ = _applicationDBContext.Periods.Add(newPeriod);
-            _ = _applicationDBContext.SaveChanges();
+                Period newPeriod = new()
+                {
+                    Year = periodDTO.Year,
+                    Month = periodDTO.Month,
+                };
+                _ = _applicationDBContext.Periods.Add(newPeriod);
+                _ = _applicationDBContext.SaveChanges();
+                return new Response { IsSuccesful = true };
+            }
+            catch (Exception ex)
+            {
+                return new Response { IsSuccesful = false, ErrorMessage = ex.Message };
+            }
         }
 
-        public void DeletePeriod(int periodId)
+        public Response DeletePeriod(int periodId)
         {
-            Period periodById = _applicationDBContext.Periods.FirstOrDefault(x => x.PeriodId == periodId);
-            if (periodById != null)
+            try
             {
-                _ = _applicationDBContext.Periods.Remove(periodById);
-                _ = _applicationDBContext.SaveChanges();
+                Period periodById = _applicationDBContext.Periods.FirstOrDefault(x => x.PeriodId == periodId);
+                if (periodById != null)
+                {
+                    _ = _applicationDBContext.Periods.Remove(periodById);
+                    _ = _applicationDBContext.SaveChanges();
+                    return new Response { IsSuccesful = true };
+                }
+                return new Response { IsSuccesful = false, ErrorMessage = $"No period with period id {periodId} was found" };
+            }
+            catch (Exception ex)
+            {
+                return new Response { IsSuccesful = false, ErrorMessage = ex.Message };
             }
         }
 
@@ -68,7 +86,7 @@ namespace BT_Remunerare.DAL.Repository.Classes
                     PeriodId = saleRemunerationRule.PeriodId,
                     ProductId = saleRemunerationRule.ProductId,
                     Remuneration = saleRemunerationRule.Remuneration,
-                    RemunerationProduct = new ProductDTO { ProductId = saleRemunerationRule.RemunerationProduct.ProductId, ProductName = saleRemunerationRule.RemunerationProduct.ProductName },
+                    SalesRemunerationProduct = new ProductDTO { ProductId = saleRemunerationRule.RemunerationProduct.ProductId, ProductName = saleRemunerationRule.RemunerationProduct.ProductName },
                     SalesRemunerationPeriod = new PeriodDTO { PeriodId = saleRemunerationRule.SalesRemunerationPeriod.PeriodId, Year = saleRemunerationRule.SalesRemunerationPeriod.Year, Month = saleRemunerationRule.SalesRemunerationPeriod.Month },
                 }).ToList(),
             }).ToList();
@@ -88,14 +106,24 @@ namespace BT_Remunerare.DAL.Repository.Classes
                 };
         }
 
-        public void UpdatePeriod(PeriodDTO periodDTO)
+        public Response UpdatePeriod(PeriodDTO periodDTO)
         {
-            Period periodById = _applicationDBContext.Periods.FirstOrDefault(x => x.PeriodId == periodDTO.PeriodId);
-            if (periodById != null)
+            try
             {
-                periodById.Year = periodDTO.Year;
-                periodById.Month = periodDTO.Month;
-                _ = _applicationDBContext.SaveChanges();
+                Period periodById = _applicationDBContext.Periods.FirstOrDefault(x => x.PeriodId == periodDTO.PeriodId);
+                if (periodById != null)
+                {
+                    periodById.Year = (periodById.Year == periodDTO.Year) || periodDTO.Year == 0 ? periodById.Year : periodDTO.Year;
+                    periodById.Month = (periodById.Month == periodDTO.Month) || periodDTO.Month == 0 ? periodById.Month : periodDTO.Month;
+                    _ = _applicationDBContext.SaveChanges();
+                    return new Response { IsSuccesful = true };
+                }
+                return new Response { IsSuccesful = false, ErrorMessage = $"No period with period id {periodDTO.PeriodId} was found" };
+
+            }
+            catch (Exception ex)
+            {
+                return new Response { IsSuccesful = false, ErrorMessage = ex.Message };
             }
         }
     }
