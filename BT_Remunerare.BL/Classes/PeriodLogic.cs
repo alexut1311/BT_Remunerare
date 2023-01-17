@@ -1,5 +1,6 @@
 ﻿using BT_Remunerare.BL.Interfaces;
 using BT_Remunerare.DAL.Repository.Interfaces;
+using BT_Remunerare.TL.Common;
 using BT_Remunerare.TL.DTO;
 
 namespace BT_Remunerare.BL.Classes
@@ -12,18 +13,14 @@ namespace BT_Remunerare.BL.Classes
             _periodRepository = periodRepository;
         }
 
-        public void AddPeriod(PeriodDTO periodDTO)
+        public Response AddPeriod(PeriodDTO periodDTO)
         {
-            _periodRepository.AddPeriod(periodDTO);
+            return _periodRepository.AddPeriod(periodDTO);
         }
 
-        public void DeletePeriod(int periodId)
+        public Response DeletePeriod(int periodId)
         {
-            if (periodId == 0)
-            {
-                return;
-            }
-            _periodRepository.DeletePeriod(periodId);
+            return _periodRepository.DeletePeriod(periodId);
         }
 
         public IList<PeriodDTO> GetAllPeriods()
@@ -41,9 +38,9 @@ namespace BT_Remunerare.BL.Classes
             return periodId == 0 ? null : _periodRepository.GetPeriodById(periodId);
         }
 
-        public void UpdatePeriod(PeriodDTO periodDTO)
+        public Response UpdatePeriod(PeriodDTO periodDTO)
         {
-            _periodRepository.UpdatePeriod(periodDTO);
+            return _periodRepository.UpdatePeriod(periodDTO);
         }
     }
 }

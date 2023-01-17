@@ -1,6 +1,10 @@
-﻿using BT_Remunerare.BL.Interfaces;
+﻿using BT_Remunerare.BL.Classes;
+using BT_Remunerare.BL.Interfaces;
+using BT_Remunerare.DAL.Entities;
+using BT_Remunerare.Helpers.Classes;
 using BT_Remunerare.Helpers.Interfaces;
 using BT_Remunerare.Models;
+using BT_Remunerare.TL.Common;
 using BT_Remunerare.TL.DTO;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,43 +25,94 @@ namespace BT_Remunerare.Controllers
 
         [HttpPost]
         [Route("AddProduct")]
-        public void AddProduct(ProductViewModel productViewModel)
+        public IActionResult AddProduct(ProductViewModel productViewModel)
         {
-            ProductDTO productDTO = _productControllerHelper.BuildDTO(productViewModel);
-            _productLogic.AddProduct(productDTO);
+            try
+            {
+                ProductDTO productDTO = _productControllerHelper.BuildDTO(productViewModel);
+                Response response = _productLogic.AddProduct(productDTO);
+                if (response.IsSuccesful)
+                {
+                    return Ok();
+                }
+                return StatusCode(500, (response));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+            }
         }
 
         [HttpPost]
         [Route("DeleteProduct")]
-        public void DeleteProduct(int productId)
+        public IActionResult DeleteProduct(int productId)
         {
-            _productLogic.DeleteProduct(productId);
+            try
+            {
+                Response response = _productLogic.DeleteProduct(productId);
+
+                if (response.IsSuccesful)
+                {
+                    return Ok();
+                }
+                return StatusCode(500, (response));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+            }
         }
 
         [HttpGet]
         [Route("GetAllProducts")]
-        public IList<ProductViewModel> GetAllProducts()
+        public IActionResult GetAllProducts()
         {
-            IList<ProductDTO> productDTOs = _productLogic.GetAllProducts();
-            IList<ProductViewModel> productViewModels = _productControllerHelper.BuildListViewModel(productDTOs);
-            return productViewModels;
+            try
+            {
+                IList<ProductDTO> productDTOs = _productLogic.GetAllProducts();
+                IList<ProductViewModel> productViewModels = _productControllerHelper.BuildListViewModel(productDTOs);
+                return Ok(productViewModels);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+            }
         }
 
         [HttpGet]
         [Route("GetProductById")]
-        public ProductViewModel? GetProductById(int productId)
+        public IActionResult GetProductById(int productId)
         {
-            ProductDTO productDTO = _productLogic.GetProductById(productId);
-            ProductViewModel productViewModel = _productControllerHelper.BuildViewModel(productDTO);
-            return productViewModel;
+            try
+            {
+                ProductDTO productDTO = _productLogic.GetProductById(productId);
+                ProductViewModel productViewModel = _productControllerHelper.BuildViewModel(productDTO);
+                return Ok(productViewModel);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+            }
         }
 
         [HttpPost]
         [Route("UpdateProduct")]
-        public void UpdateProduct(ProductViewModel productViewModel)
+        public IActionResult UpdateProduct(ProductViewModel productViewModel)
         {
-            ProductDTO productDTO = _productControllerHelper.BuildDTO(productViewModel);
-            _productLogic.UpdateProduct(productDTO);
+            try
+            {
+                ProductDTO productDTO = _productControllerHelper.BuildDTO(productViewModel);
+                Response response = _productLogic.UpdateProduct(productDTO);
+                if (response.IsSuccesful)
+                {
+                    return Ok();
+                }
+                return StatusCode(500, (response));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+            }
         }
     }
 }

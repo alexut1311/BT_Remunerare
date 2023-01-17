@@ -1,6 +1,10 @@
-﻿using BT_Remunerare.BL.Interfaces;
+﻿using BT_Remunerare.BL.Classes;
+using BT_Remunerare.BL.Interfaces;
+using BT_Remunerare.DAL.Entities;
+using BT_Remunerare.Helpers.Classes;
 using BT_Remunerare.Helpers.Interfaces;
 using BT_Remunerare.Models;
+using BT_Remunerare.TL.Common;
 using BT_Remunerare.TL.DTO;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,52 +25,109 @@ namespace BT_Remunerare.Controllers
 
         [HttpPost]
         [Route("AddSale")]
-        public void AddSale([FromBody] SaleViewModel saleViewModel)
+        public IActionResult AddSale([FromBody] SaleViewModel saleViewModel)
         {
-            SaleDTO saleDTO = _saleControllerHelper.BuildDTO(saleViewModel);
-            _saleLogic.AddSale(saleDTO);
+            try
+            {
+                SaleDTO saleDTO = _saleControllerHelper.BuildDTO(saleViewModel);
+                Response response = _saleLogic.AddSale(saleDTO);
+                if (response.IsSuccesful)
+                {
+                    return Ok();
+                }
+                return StatusCode(500, (response));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+            }
         }
 
         [HttpPost]
         [Route("DeleteSale")]
-        public void DeleteSale(int saleId)
+        public IActionResult DeleteSale(int saleId)
         {
-            _saleLogic.DeleteSale(saleId);
+            try
+            {
+                Response response = _saleLogic.DeleteSale(saleId);
+                if (response.IsSuccesful)
+                {
+                    return Ok();
+                }
+                return StatusCode(500, (response));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+            }
         }
 
         [HttpGet]
         [Route("GetAllSales")]
-        public IList<SaleViewModel> GetAllSales()
+        public IActionResult GetAllSales()
         {
-            IList<SaleDTO> saleDTOs = _saleLogic.GetAllSales();
-            IList<SaleViewModel> saleViewModels = _saleControllerHelper.BuildListViewModel(saleDTOs);
-            return saleViewModels;
+            try
+            {
+                IList<SaleDTO> saleDTOs = _saleLogic.GetAllSales();
+                IList<SaleViewModel> saleViewModels = _saleControllerHelper.BuildListViewModel(saleDTOs);
+                return Ok(saleViewModels);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+            }
         }
 
         [HttpGet]
         [Route("GetAllSalesWithVendorAndProductAndPeriod")]
-        public IList<SaleViewModel> GetAllSalesWithVendorAndProductAndPeriod()
+        public IActionResult GetAllSalesWithVendorAndProductAndPeriod()
         {
-            IList<SaleDTO> saleDTOs = _saleLogic.GetAllSales();
-            IList<SaleViewModel> saleViewModels = _saleControllerHelper.BuildListViewModelWithVendorAndProductAndPeriod(saleDTOs);
-            return saleViewModels;
+            try
+            {
+                IList<SaleDTO> saleDTOs = _saleLogic.GetAllSales();
+                IList<SaleViewModel> saleViewModels = _saleControllerHelper.BuildListViewModelWithVendorAndProductAndPeriod(saleDTOs);
+                return Ok(saleViewModels);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+            }
         }
 
         [HttpGet]
         [Route("GetSaleById")]
-        public SaleViewModel? GetSaleById(int saleId)
+        public IActionResult GetSaleById(int saleId)
         {
-            SaleDTO saleDTO = _saleLogic.GetSaleById(saleId);
-            SaleViewModel saleViewModel = _saleControllerHelper.BuildViewModel(saleDTO);
-            return saleViewModel;
+            try
+            {
+                SaleDTO saleDTO = _saleLogic.GetSaleById(saleId);
+                SaleViewModel saleViewModel = _saleControllerHelper.BuildViewModel(saleDTO);
+                return Ok(saleViewModel);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+            }
         }
 
         [HttpPost]
         [Route("UpdateSale")]
-        public void UpdateSale([FromBody] SaleViewModel saleViewModel)
+        public IActionResult UpdateSale([FromBody] SaleViewModel saleViewModel)
         {
-            SaleDTO saleDTO = _saleControllerHelper.BuildDTO(saleViewModel);
-            _saleLogic.UpdateSale(saleDTO);
+            try
+            {
+                SaleDTO saleDTO = _saleControllerHelper.BuildDTO(saleViewModel);
+                Response response = _saleLogic.UpdateSale(saleDTO);
+                if (response.IsSuccesful)
+                {
+                    return Ok();
+                }
+                return StatusCode(500, (response));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+            }
         }
     }
 }

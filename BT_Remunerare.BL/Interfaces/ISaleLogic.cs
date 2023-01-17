@@ -1,13 +1,14 @@
-﻿using BT_Remunerare.TL.DTO;
+﻿using BT_Remunerare.TL.Common;
+using BT_Remunerare.TL.DTO;
 
 namespace BT_Remunerare.BL.Interfaces
 {
     public interface ISaleLogic
     {
-        void AddSale(SaleDTO saleDTO);
+        Response AddSale(SaleDTO saleDTO);
         SaleDTO? GetSaleById(int saleId);
-        void UpdateSale(SaleDTO saleDTO);
-        void DeleteSale(int saleId);
+        Response UpdateSale(SaleDTO saleDTO);
+        Response DeleteSale(int saleId);
         IList<SaleDTO> GetAllSales();
     }
 }

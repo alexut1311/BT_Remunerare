@@ -1,6 +1,10 @@
-﻿using BT_Remunerare.BL.Interfaces;
+﻿using BT_Remunerare.BL.Classes;
+using BT_Remunerare.BL.Interfaces;
+using BT_Remunerare.DAL.Entities;
+using BT_Remunerare.Helpers.Classes;
 using BT_Remunerare.Helpers.Interfaces;
 using BT_Remunerare.Models;
+using BT_Remunerare.TL.Common;
 using BT_Remunerare.TL.DTO;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,43 +24,92 @@ namespace BT_Remunerare.Controllers
 
         [HttpPost]
         [Route("AddVendor")]
-        public void AddVendor(VendorViewModel vendorViewModel)
+        public IActionResult AddVendor(VendorViewModel vendorViewModel)
         {
-            VendorDTO vendorDTO = _vendorControllerHelper.BuildDTO(vendorViewModel);
-            _vendorLogic.AddVendor(vendorDTO);
+            try
+            {
+                VendorDTO vendorDTO = _vendorControllerHelper.BuildDTO(vendorViewModel);
+                Response response = _vendorLogic.AddVendor(vendorDTO);
+                if (response.IsSuccesful)
+                {
+                    return Ok();
+                }
+                return StatusCode(500, (response));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+            }
         }
 
         [HttpPost]
         [Route("DeleteVendor")]
-        public void DeleteVendor(int vendorId)
+        public IActionResult DeleteVendor(int vendorId)
         {
-            _vendorLogic.DeleteVendor(vendorId);
+            try
+            {
+                Response response = _vendorLogic.DeleteVendor(vendorId);
+                if (response.IsSuccesful)
+                {
+                    return Ok();
+                }
+                return StatusCode(500, (response));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+            }
         }
 
         [HttpGet]
         [Route("GetAllVendors")]
-        public IList<VendorViewModel> GetAllVendors()
+        public IActionResult GetAllVendors()
         {
-            IList<VendorDTO> vendorDTOs = _vendorLogic.GetAllVendors();
-            IList<VendorViewModel> vendorViewModels = _vendorControllerHelper.BuildListViewModel(vendorDTOs);
-            return vendorViewModels;
+            try
+            {
+                IList<VendorDTO> vendorDTOs = _vendorLogic.GetAllVendors();
+                IList<VendorViewModel> vendorViewModels = _vendorControllerHelper.BuildListViewModel(vendorDTOs);
+                return Ok(vendorViewModels);            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+            }
         }
 
         [HttpGet]
         [Route("GetVendorById")]
-        public VendorViewModel? GetVendorById(int vendorId)
+        public IActionResult GetVendorById(int vendorId)
         {
-            VendorDTO vendorDTO = _vendorLogic.GetVendorById(vendorId);
-            VendorViewModel vendorViewModel = _vendorControllerHelper.BuildViewModel(vendorDTO);
-            return vendorViewModel;
+            try
+            {
+                VendorDTO vendorDTO = _vendorLogic.GetVendorById(vendorId);
+                VendorViewModel vendorViewModel = _vendorControllerHelper.BuildViewModel(vendorDTO);
+                return Ok(vendorViewModel);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+            }
         }
 
         [HttpPost]
         [Route("UpdateVendor")]
-        public void UpdateVendor(VendorViewModel vendorViewModel)
+        public IActionResult UpdateVendor(VendorViewModel vendorViewModel)
         {
-            VendorDTO vendorDTO = _vendorControllerHelper.BuildDTO(vendorViewModel);
-            _vendorLogic.UpdateVendor(vendorDTO);
+            try
+            {
+                VendorDTO vendorDTO = _vendorControllerHelper.BuildDTO(vendorViewModel);
+                Response response = _vendorLogic.UpdateVendor(vendorDTO);
+                if (response.IsSuccesful)
+                {
+                    return Ok();
+                }
+                return StatusCode(500, (response));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+            }
         }
     }
 }

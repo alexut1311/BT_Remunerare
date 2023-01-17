@@ -1,5 +1,6 @@
 ﻿using BT_Remunerare.BL.Interfaces;
 using BT_Remunerare.DAL.Repository.Interfaces;
+using BT_Remunerare.TL.Common;
 using BT_Remunerare.TL.DTO;
 
 namespace BT_Remunerare.BL.Classes
@@ -13,18 +14,14 @@ namespace BT_Remunerare.BL.Classes
             _saleRepository = saleRepository;
         }
 
-        public void AddSale(SaleDTO saleDTO)
+        public Response AddSale(SaleDTO saleDTO)
         {
-            _saleRepository.AddSale(saleDTO);
+            return _saleRepository.AddSale(saleDTO);
         }
 
-        public void DeleteSale(int saleId)
+        public Response DeleteSale(int saleId)
         {
-            if (saleId == 0)
-            {
-                return;
-            }
-            _saleRepository.DeleteSale(saleId);
+            return _saleRepository.DeleteSale(saleId);
         }
 
         public IList<SaleDTO> GetAllSales()
@@ -37,9 +34,9 @@ namespace BT_Remunerare.BL.Classes
             return saleId == 0 ? null : _saleRepository.GetSaleById(saleId);
         }
 
-        public void UpdateSale(SaleDTO saleDTO)
+        public Response UpdateSale(SaleDTO saleDTO)
         {
-            _saleRepository.UpdateSale(saleDTO);
+            return _saleRepository.UpdateSale(saleDTO);
         }
     }
 }

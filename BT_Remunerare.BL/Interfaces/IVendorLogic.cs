@@ -1,13 +1,14 @@
-﻿using BT_Remunerare.TL.DTO;
+﻿using BT_Remunerare.TL.Common;
+using BT_Remunerare.TL.DTO;
 
 namespace BT_Remunerare.BL.Interfaces
 {
     public interface IVendorLogic
     {
-        void AddVendor(VendorDTO vendorDTO);
+        Response AddVendor(VendorDTO vendorDTO);
         VendorDTO? GetVendorById(int vendorId);
-        void UpdateVendor(VendorDTO vendorDTO);
-        void DeleteVendor(int vendorId);
+        Response UpdateVendor(VendorDTO vendorDTO);
+        Response DeleteVendor(int vendorId);
         IList<VendorDTO> GetAllVendors();
     }
 }
