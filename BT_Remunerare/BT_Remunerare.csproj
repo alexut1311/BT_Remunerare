@@ -33,6 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BT_Remunerare.BL\BT_Remunerare.BL.csproj" />
     <ProjectReference Include="..\BT_Remunerare.DAL\BT_Remunerare.DAL.csproj" />
     <ProjectReference Include="..\BT_Remunerare.TL\BT_Remunerare.TL.csproj" />
   </ItemGroup>

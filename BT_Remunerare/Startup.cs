@@ -1,4 +1,8 @@
-﻿using BT_Remunerare.DAL;
+﻿using BT_Remunerare.BL.Classes;
+using BT_Remunerare.BL.Interfaces;
+using BT_Remunerare.DAL;
+using BT_Remunerare.DAL.Repository.Classes;
+using BT_Remunerare.DAL.Repository.Interfaces;
 using BT_Remunerare.TL.Common;
 using Microsoft.AspNetCore.Server.IISIntegration;
 using Microsoft.EntityFrameworkCore;
@@ -42,13 +46,21 @@ namespace BT_Remunerare
         // Register the DAL Dependencies
         private void RegisterDALDependencies(IServiceCollection services)
         {
-
+            _ = services.AddTransient<IPeriodRepository, PeriodRepository>();
+            _ = services.AddTransient<IProductRepository, ProductRepository>();
+            _ = services.AddTransient<ISaleRepository, SaleRepository>();
+            _ = services.AddTransient<ISalesRemunerationRepository, SalesRemunerationRepository>();
+            _ = services.AddTransient<IVendorRepository, VendorRepository>();
         }
 
         // Register the BL Dependencies
         private void RegisterBLDependencies(IServiceCollection services)
         {
-
+            _ = services.AddTransient<IPeriodLogic, PeriodLogic>();
+            _ = services.AddTransient<IProductLogic, ProductLogic>();
+            _ = services.AddTransient<ISaleLogic, SaleLogic>();
+            _ = services.AddTransient<ISalesRemunerationLogic, SalesRemunerationLogic>();
+            _ = services.AddTransient<IVendorLogic, VendorLogic>();
         }
     }
 }
