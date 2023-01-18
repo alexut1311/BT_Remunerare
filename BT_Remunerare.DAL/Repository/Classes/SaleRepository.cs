@@ -143,5 +143,21 @@ namespace BT_Remunerare.DAL.Repository.Classes
                 return new Response { IsSuccesful = false, ErrorMessage = ex.Message };
             }
         }
+
+        public IList<SaleDTO> GetSalesByPeriodId(int periodId)
+        {
+            IList<SaleDTO> saleDTOs = _applicationDBContext.Sales.Include(x => x.SaleProduct).Include(x => x.SaleVendor).Include(x => x.SalePeriod).Where(x => x.PeriodId == periodId).Select(sale => new SaleDTO
+            {
+                SaleId = sale.SaleId,
+                PeriodId = sale.PeriodId,
+                VendorId = sale.VendorId,
+                ProductId = sale.ProductId,
+                NumberOfProducts = sale.NumberOfProducts,
+                SaleProduct = new ProductDTO { ProductId = sale.SaleProduct.ProductId, ProductName = sale.SaleProduct.ProductName },
+                SaleVendor = new VendorDTO { VendorId = sale.SaleVendor.VendorId, VendorName = sale.SaleVendor.VendorName },
+                SalePeriod = new PeriodDTO { PeriodId = sale.SalePeriod.PeriodId, Year = sale.SalePeriod.Year, Month = sale.SalePeriod.Month }
+            }).ToList();
+            return saleDTOs;
+        }
     }
 }

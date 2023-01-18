@@ -1,5 +1,6 @@
 ﻿using BT_Remunerare.BL.Interfaces;
 using BT_Remunerare.DAL.Repository.Interfaces;
+using BT_Remunerare.TL.Common;
 using BT_Remunerare.TL.DTO;
 
 namespace BT_Remunerare.BL.Classes
@@ -13,18 +14,14 @@ namespace BT_Remunerare.BL.Classes
             _productRepository = productRepository;
         }
 
-        public void AddProduct(ProductDTO productDTO)
+        public Response AddProduct(ProductDTO productDTO)
         {
-            _productRepository.AddProduct(productDTO);
+            return _productRepository.AddProduct(productDTO);
         }
 
-        public void DeleteProduct(int productId)
+        public Response DeleteProduct(int productId)
         {
-            if (productId == 0)
-            {
-                return;
-            }
-            _productRepository.DeleteProduct(productId);
+            return _productRepository.DeleteProduct(productId);
         }
 
         public IList<ProductDTO> GetAllProducts()
@@ -37,9 +34,9 @@ namespace BT_Remunerare.BL.Classes
             return productId == 0 ? null : _productRepository.GetProductById(productId);
         }
 
-        public void UpdateProduct(ProductDTO productDTO)
+        public Response UpdateProduct(ProductDTO productDTO)
         {
-            _productRepository.UpdateProduct(productDTO);
+            return _productRepository.UpdateProduct(productDTO);
         }
     }
 }

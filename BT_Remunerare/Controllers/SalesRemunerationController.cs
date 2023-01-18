@@ -1,6 +1,7 @@
 ﻿using BT_Remunerare.BL.Interfaces;
 using BT_Remunerare.Helpers.Interfaces;
 using BT_Remunerare.Models;
+using BT_Remunerare.TL.Common;
 using BT_Remunerare.TL.DTO;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,52 +22,99 @@ namespace BT_Remunerare.Controllers
 
         [HttpPost]
         [Route("AddSalesRemuneration")]
-        public void AddSalesRemuneration([FromBody] SalesRemunerationRuleViewModel saleRemunerationViewModel)
+        public IActionResult AddSalesRemuneration([FromBody] SalesRemunerationRuleViewModel saleRemunerationViewModel)
         {
-            SalesRemunerationRuleDTO saleRemunerationDTO = _saleRemunerationControllerHelper.BuildDTO(saleRemunerationViewModel);
-            _saleRemunerationLogic.AddSalesRemuneration(saleRemunerationDTO);
+            try
+            {
+                SalesRemunerationRuleDTO saleRemunerationDTO = _saleRemunerationControllerHelper.BuildDTO(saleRemunerationViewModel);
+                Response response = _saleRemunerationLogic.AddSalesRemuneration(saleRemunerationDTO);
+
+                return response.IsSuccesful ? Ok() : StatusCode(500, response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new Response { IsSuccesful = false, ErrorMessage = ex.Message });
+            }
         }
 
         [HttpPost]
-        [Route("DeleteSalesRemuneration")]
-        public void DeleteSalesRemuneration(int saleRemunerationId)
+        [Route("DeleteSalesRemuneration/{saleRemunerationId}")]
+        public IActionResult DeleteSalesRemuneration(int saleRemunerationId)
         {
-            _saleRemunerationLogic.DeleteSalesRemuneration(saleRemunerationId);
+            try
+            {
+                Response response = _saleRemunerationLogic.DeleteSalesRemuneration(saleRemunerationId);
+                return response.IsSuccesful ? Ok() : StatusCode(500, response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new Response { IsSuccesful = false, ErrorMessage = ex.Message });
+            }
         }
 
         [HttpGet]
         [Route("GetAllSalesRemunerations")]
-        public IList<SalesRemunerationRuleViewModel> GetAllSalesRemunerations()
+        public IActionResult GetAllSalesRemunerations()
         {
-            IList<SalesRemunerationRuleDTO> saleRemunerationDTOs = _saleRemunerationLogic.GetAllSalesRemunerationRules();
-            IList<SalesRemunerationRuleViewModel> saleRemunerationViewModels = _saleRemunerationControllerHelper.BuildListViewModel(saleRemunerationDTOs);
-            return saleRemunerationViewModels;
+            try
+            {
+                IList<SalesRemunerationRuleDTO> saleRemunerationDTOs = _saleRemunerationLogic.GetAllSalesRemunerationRules();
+                IList<SalesRemunerationRuleViewModel> saleRemunerationViewModels = _saleRemunerationControllerHelper.BuildListViewModel(saleRemunerationDTOs);
+                return Ok(saleRemunerationViewModels);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new Response { IsSuccesful = false, ErrorMessage = ex.Message });
+            }
         }
 
         [HttpGet]
         [Route("GetAllSalesRemunerationsWithProductAndPeriod")]
-        public IList<SalesRemunerationRuleViewModel> GetAllSalesRemunerationsWithProductAndPeriod()
+        public IActionResult GetAllSalesRemunerationsWithProductAndPeriod()
         {
-            IList<SalesRemunerationRuleDTO> saleRemunerationDTOs = _saleRemunerationLogic.GetAllSalesRemunerationRules();
-            IList<SalesRemunerationRuleViewModel> saleRemunerationViewModels = _saleRemunerationControllerHelper.BuildListViewModelWithProductAndPeriod(saleRemunerationDTOs);
-            return saleRemunerationViewModels;
+            try
+            {
+                IList<SalesRemunerationRuleDTO> saleRemunerationDTOs = _saleRemunerationLogic.GetAllSalesRemunerationRules();
+                IList<SalesRemunerationRuleViewModel> saleRemunerationViewModels = _saleRemunerationControllerHelper.BuildListViewModelWithProductAndPeriod(saleRemunerationDTOs);
+                return Ok(saleRemunerationViewModels);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new Response { IsSuccesful = false, ErrorMessage = ex.Message });
+            }
         }
 
         [HttpGet]
-        [Route("GetSalesRemunerationById")]
-        public SalesRemunerationRuleViewModel? GetSalesRemunerationById(int saleRemunerationId)
+        [Route("GetSalesRemunerationById/{saleRemunerationId}")]
+        public IActionResult GetSalesRemunerationById(int saleRemunerationId)
         {
-            SalesRemunerationRuleDTO saleRemunerationDTO = _saleRemunerationLogic.GetSalesRemunerationById(saleRemunerationId);
-            SalesRemunerationRuleViewModel saleRemunerationViewModel = _saleRemunerationControllerHelper.BuildViewModel(saleRemunerationDTO);
-            return saleRemunerationViewModel;
+            try
+            {
+                SalesRemunerationRuleDTO saleRemunerationDTO = _saleRemunerationLogic.GetSalesRemunerationById(saleRemunerationId);
+                SalesRemunerationRuleViewModel saleRemunerationViewModel = _saleRemunerationControllerHelper.BuildViewModel(saleRemunerationDTO);
+                return Ok(saleRemunerationViewModel);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new Response { IsSuccesful = false, ErrorMessage = ex.Message });
+            }
         }
 
         [HttpPost]
         [Route("UpdateSalesRemuneration")]
-        public void UpdateSalesRemuneration([FromBody] SalesRemunerationRuleViewModel saleRemunerationViewModel)
+        public IActionResult UpdateSalesRemuneration([FromBody] SalesRemunerationRuleViewModel saleRemunerationViewModel)
         {
-            SalesRemunerationRuleDTO saleRemunerationDTO = _saleRemunerationControllerHelper.BuildDTO(saleRemunerationViewModel);
-            _saleRemunerationLogic.UpdateSalesRemuneration(saleRemunerationDTO);
+            try
+            {
+                SalesRemunerationRuleDTO saleRemunerationDTO = _saleRemunerationControllerHelper.BuildDTO(saleRemunerationViewModel);
+
+                Response response = _saleRemunerationLogic.UpdateSalesRemuneration(saleRemunerationDTO);
+                return response.IsSuccesful ? Ok() : StatusCode(500, response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new Response { IsSuccesful = false, ErrorMessage = ex.Message });
+            }
         }
     }
 }

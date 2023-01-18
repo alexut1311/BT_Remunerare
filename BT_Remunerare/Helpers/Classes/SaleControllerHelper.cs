@@ -58,6 +58,28 @@ namespace BT_Remunerare.Helpers.Classes
             }).ToList();
         }
 
+        public TotalSalesViewModel BuildTotalSalesViewModel(TotalSalesDTO totalSalesValueDTO)
+        {
+            TotalSalesViewModel totalSalesViewModel = new();
+
+            foreach (KeyValuePair<int, IList<VendorTotalSalesDTO>> sale in totalSalesValueDTO.TotalSales)
+            {
+                IList<VendorTotalSalesViewModel> vendorTotalSalesViewModel = new List<VendorTotalSalesViewModel>();
+                foreach (VendorTotalSalesDTO vendorSale in sale.Value)
+                {
+                    vendorTotalSalesViewModel.Add(new VendorTotalSalesViewModel
+                    {
+                        Product = new ProductViewModel { ProductId = vendorSale.Product.ProductId, ProductName = vendorSale.Product.ProductName },
+                        Vendor = new VendorViewModel { VendorId = vendorSale.Vendor.VendorId, VendorName = vendorSale.Vendor.VendorName },
+                        TotalSalesValue = vendorSale.TotalSalesValue
+                    });
+                }
+                totalSalesViewModel.TotalSales.Add(sale.Key, vendorTotalSalesViewModel);
+            }
+
+            return totalSalesViewModel;
+        }
+
         public SaleViewModel BuildViewModel(SaleDTO? saleDTO)
         {
             return new SaleViewModel

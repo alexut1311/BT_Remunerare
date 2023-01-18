@@ -18,6 +18,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseSwagger();
+app.UseCors("AllowRequests");
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint(builder.Configuration["Swagger:Endpoint"], "My API V1");

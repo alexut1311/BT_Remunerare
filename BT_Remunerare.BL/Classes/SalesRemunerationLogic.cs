@@ -1,5 +1,6 @@
 ﻿using BT_Remunerare.BL.Interfaces;
 using BT_Remunerare.DAL.Repository.Interfaces;
+using BT_Remunerare.TL.Common;
 using BT_Remunerare.TL.DTO;
 
 namespace BT_Remunerare.BL.Classes
@@ -13,18 +14,14 @@ namespace BT_Remunerare.BL.Classes
             _salesRemunerationRepository = salesRemunerationRepository;
         }
 
-        public void AddSalesRemuneration(SalesRemunerationRuleDTO salesRemunerationDTO)
+        public Response AddSalesRemuneration(SalesRemunerationRuleDTO salesRemunerationDTO)
         {
-            _salesRemunerationRepository.AddSalesRemuneration(salesRemunerationDTO);
+            return _salesRemunerationRepository.AddSalesRemuneration(salesRemunerationDTO);
         }
 
-        public void DeleteSalesRemuneration(int salesRemunerationId)
+        public Response DeleteSalesRemuneration(int salesRemunerationId)
         {
-            if (salesRemunerationId == 0)
-            {
-                return;
-            }
-            _salesRemunerationRepository.DeleteSalesRemuneration(salesRemunerationId);
+            return _salesRemunerationRepository.DeleteSalesRemuneration(salesRemunerationId);
         }
 
         public IList<SalesRemunerationRuleDTO> GetAllSalesRemunerationRules()
@@ -37,9 +34,9 @@ namespace BT_Remunerare.BL.Classes
             return salesRemunerationId == 0 ? null : _salesRemunerationRepository.GetSalesRemunerationById(salesRemunerationId);
         }
 
-        public void UpdateSalesRemuneration(SalesRemunerationRuleDTO salesRemunerationDTO)
+        public Response UpdateSalesRemuneration(SalesRemunerationRuleDTO salesRemunerationDTO)
         {
-            _salesRemunerationRepository.UpdateSalesRemuneration(salesRemunerationDTO);
+            return _salesRemunerationRepository.UpdateSalesRemuneration(salesRemunerationDTO);
         }
     }
 }

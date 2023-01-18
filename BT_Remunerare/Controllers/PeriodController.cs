@@ -1,6 +1,7 @@
 ﻿using BT_Remunerare.BL.Interfaces;
 using BT_Remunerare.Helpers.Interfaces;
 using BT_Remunerare.Models;
+using BT_Remunerare.TL.Common;
 using BT_Remunerare.TL.DTO;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,52 +22,97 @@ namespace BT_Remunerare.Controllers
 
         [HttpPost]
         [Route("AddPeriod")]
-        public void AddPeriod([FromBody] PeriodViewModel periodViewModel)
+        public IActionResult AddPeriod([FromBody] PeriodViewModel periodViewModel)
         {
-            PeriodDTO periodDTO = _periodControllerHelper.BuildDTO(periodViewModel);
-            _periodLogic.AddPeriod(periodDTO);
+            try
+            {
+                PeriodDTO periodDTO = _periodControllerHelper.BuildDTO(periodViewModel);
+                Response response = _periodLogic.AddPeriod(periodDTO);
+                return response.IsSuccesful ? Ok() : StatusCode(500, response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new Response { IsSuccesful = false, ErrorMessage = ex.Message });
+            }
         }
 
         [HttpPost]
-        [Route("DeletePeriod")]
-        public void DeletePeriod(int periodId)
+        [Route("DeletePeriod/{periodId}")]
+        public IActionResult DeletePeriod(int periodId)
         {
-            _periodLogic.DeletePeriod(periodId);
+            try
+            {
+                Response response = _periodLogic.DeletePeriod(periodId);
+                return response.IsSuccesful ? Ok() : StatusCode(500, response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new Response { IsSuccesful = false, ErrorMessage = ex.Message });
+            }
         }
 
         [HttpGet]
         [Route("GetAllPeriods")]
-        public IList<PeriodViewModel> GetAllPeriods()
+        public IActionResult GetAllPeriods()
         {
-            IList<PeriodDTO> periodDTOs = _periodLogic.GetAllPeriods();
-            IList<PeriodViewModel> periodViewModels = _periodControllerHelper.BuildListViewModel(periodDTOs);
-            return periodViewModels;
+            try
+            {
+                IList<PeriodDTO> periodDTOs = _periodLogic.GetAllPeriods();
+                IList<PeriodViewModel> periodViewModels = _periodControllerHelper.BuildListViewModel(periodDTOs);
+                return Ok(periodViewModels);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new Response { IsSuccesful = false, ErrorMessage = ex.Message });
+            }
         }
 
         [HttpGet]
         [Route("GetAllPeriodsWithSalesAndRemuneration")]
-        public IList<PeriodViewModel> GetAllPeriodsWithSalesAndRemuneration()
+        public IActionResult GetAllPeriodsWithSalesAndRemuneration()
         {
-            IList<PeriodDTO> periodDTOs = _periodLogic.GetAllPeriodsWithSalesAndRemuneration();
-            IList<PeriodViewModel> periodViewModels = _periodControllerHelper.BuildListViewModelWithSalesAndRemuneration(periodDTOs);
-            return periodViewModels;
+            try
+            {
+                IList<PeriodDTO> periodDTOs = _periodLogic.GetAllPeriodsWithSalesAndRemuneration();
+                IList<PeriodViewModel> periodViewModels = _periodControllerHelper.BuildListViewModelWithSalesAndRemuneration(periodDTOs);
+                return Ok(periodViewModels);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new Response { IsSuccesful = false, ErrorMessage = ex.Message });
+            }
         }
 
         [HttpGet]
-        [Route("GetPeriodById")]
-        public PeriodViewModel? GetPeriodById(int periodId)
+        [Route("GetPeriodById/{periodId}")]
+        public IActionResult GetPeriodById(int periodId)
         {
-            PeriodDTO periodDTO = _periodLogic.GetPeriodById(periodId);
-            PeriodViewModel periodViewModel = _periodControllerHelper.BuildViewModel(periodDTO);
-            return periodViewModel;
+            try
+            {
+                PeriodDTO periodDTO = _periodLogic.GetPeriodById(periodId);
+                PeriodViewModel periodViewModel = _periodControllerHelper.BuildViewModel(periodDTO);
+                return Ok(periodViewModel);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new Response { IsSuccesful = false, ErrorMessage = ex.Message });
+            }
         }
 
         [HttpPost]
         [Route("UpdatePeriod")]
-        public void UpdatePeriod([FromBody] PeriodViewModel periodViewModel)
+        public IActionResult UpdatePeriod([FromBody] PeriodViewModel periodViewModel)
         {
-            PeriodDTO periodDTO = _periodControllerHelper.BuildDTO(periodViewModel);
-            _periodLogic.UpdatePeriod(periodDTO);
+            try
+            {
+                PeriodDTO periodDTO = _periodControllerHelper.BuildDTO(periodViewModel);
+                Response response = _periodLogic.UpdatePeriod(periodDTO);
+                return response.IsSuccesful ? Ok() : StatusCode(500, response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new Response { IsSuccesful = false, ErrorMessage = ex.Message });
+            }
         }
     }
 }

@@ -1,26 +1,76 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
+import httpClient from "../utils/httpClient";
 
 export class Home extends Component {
   static displayName = Home.name;
+  constructor(props) {
+    super(props);
+    this.state = {
+      period: [],
+      allSelectablePeriods: [],
+      totalSales: [],
+      loading: true,
+      periodId: 0,
+      createModalOpen: false,
+    };
+  }
 
+  async componentDidMount() {
+    await this.populatePeriodData();
+  }
   render() {
+    let contents = this.state.loading ? (
+      <p>
+        <em>Loading...</em>
+      </p>
+    ) : (
+      <p></p>
+      //this.renderTotalSalesTable(this.state.periods)
+    );
+
     return (
       <div>
-        <h1>Hello, world!</h1>
-        <p>Welcome to your new single-page application, built with:</p>
-        <ul>
-          <li><a href='https://get.asp.net/'>ASP.NET Core</a> and <a href='https://msdn.microsoft.com/en-us/library/67ef8sbd.aspx'>C#</a> for cross-platform server-side code</li>
-          <li><a href='https://facebook.github.io/react/'>React</a> for client-side code</li>
-          <li><a href='http://getbootstrap.com/'>Bootstrap</a> for layout and styling</li>
-        </ul>
-        <p>To help you get started, we have also set up:</p>
-        <ul>
-          <li><strong>Client-side navigation</strong>. For example, click <em>Counter</em> then <em>Back</em> to return here.</li>
-          <li><strong>Development server integration</strong>. In development mode, the development server from <code>create-react-app</code> runs in the background automatically, so your client-side resources are dynamically built on demand and the page refreshes when you modify any file.</li>
-          <li><strong>Efficient production builds</strong>. In production mode, development-time features are disabled, and your <code>dotnet publish</code> configuration produces minified, efficiently bundled JavaScript files.</li>
-        </ul>
-        <p>The <code>ClientApp</code> subdirectory is a standard React application based on the <code>create-react-app</code> template. If you open a command prompt in that directory, you can run <code>npm</code> commands such as <code>npm test</code> or <code>npm install</code>.</p>
+        <h1>BT Remunerare Challenge</h1>
+        <h2>
+          Tabel vanzari totale in anul {this.state.period?.year} si luna{" "}
+          {this.state.period?.month}
+        </h2>
+        {contents}
       </div>
     );
+  }
+
+  async populatePeriodData() {
+    const periodResponse = await httpClient
+      .get("/period/GetPeriodById/1")
+      .then((res) => res.json());
+    const saleResponse = await httpClient
+      .get(`/sale/GetTotalSalesValueByPeriodId/${periodResponse.periodId}`)
+      .then((res) => res.json());
+    let allSales = [];
+    for (const [key, value] of Object.entries(saleResponse.totalSales)) {
+      const uniqueProduct = [
+        ...new Set(value.map((item) => item.product.productName)),
+      ];
+      const productName = uniqueProduct[0];
+      const saleAgregation = {
+        productName: productName,
+        vendorSales: value
+          .filter((x) => x.product.productName === productName)
+          .map(function (item) {
+            return {
+              vendorName: item.vendor.vendorName,
+              totalSale: item.totalSalesValue,
+            };
+          }),
+      };
+      allSales.push(saleAgregation);
+    }
+    this.setState({
+      period: periodResponse,
+      loading: false,
+      periodId: periodResponse.periodId,
+      totalSales: allSales,
+    });
   }
 }

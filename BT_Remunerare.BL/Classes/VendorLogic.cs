@@ -1,5 +1,6 @@
 ﻿using BT_Remunerare.BL.Interfaces;
 using BT_Remunerare.DAL.Repository.Interfaces;
+using BT_Remunerare.TL.Common;
 using BT_Remunerare.TL.DTO;
 
 namespace BT_Remunerare.BL.Classes
@@ -13,18 +14,14 @@ namespace BT_Remunerare.BL.Classes
             _vendorRepository = vendorRepository;
         }
 
-        public void AddVendor(VendorDTO vendorDTO)
+        public Response AddVendor(VendorDTO vendorDTO)
         {
-            _vendorRepository.AddVendor(vendorDTO);
+            return _vendorRepository.AddVendor(vendorDTO);
         }
 
-        public void DeleteVendor(int vendorId)
+        public Response DeleteVendor(int vendorId)
         {
-            if (vendorId == 0)
-            {
-                return;
-            }
-            _vendorRepository.DeleteVendor(vendorId);
+            return _vendorRepository.DeleteVendor(vendorId);
         }
 
         public IList<VendorDTO> GetAllVendors()
@@ -37,9 +34,9 @@ namespace BT_Remunerare.BL.Classes
             return vendorId == 0 ? null : _vendorRepository.GetVendorById(vendorId);
         }
 
-        public void UpdateVendor(VendorDTO vendorDTO)
+        public Response UpdateVendor(VendorDTO vendorDTO)
         {
-            _vendorRepository.UpdateVendor(vendorDTO);
+            return _vendorRepository.UpdateVendor(vendorDTO);
         }
     }
 }
