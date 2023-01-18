@@ -1,7 +1,4 @@
-﻿using BT_Remunerare.BL.Classes;
-using BT_Remunerare.BL.Interfaces;
-using BT_Remunerare.DAL.Entities;
-using BT_Remunerare.Helpers.Classes;
+﻿using BT_Remunerare.BL.Interfaces;
 using BT_Remunerare.Helpers.Interfaces;
 using BT_Remunerare.Models;
 using BT_Remunerare.TL.Common;
@@ -30,34 +27,26 @@ namespace BT_Remunerare.Controllers
             {
                 VendorDTO vendorDTO = _vendorControllerHelper.BuildDTO(vendorViewModel);
                 Response response = _vendorLogic.AddVendor(vendorDTO);
-                if (response.IsSuccesful)
-                {
-                    return Ok();
-                }
-                return StatusCode(500, (response));
+                return response.IsSuccesful ? Ok() : StatusCode(500, response);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+                return StatusCode(500, new Response { IsSuccesful = false, ErrorMessage = ex.Message });
             }
         }
 
-        [HttpPost]
-        [Route("DeleteVendor")]
+        [HttpDelete]
+        [Route("DeleteVendor/{vendorId}")]
         public IActionResult DeleteVendor(int vendorId)
         {
             try
             {
                 Response response = _vendorLogic.DeleteVendor(vendorId);
-                if (response.IsSuccesful)
-                {
-                    return Ok();
-                }
-                return StatusCode(500, (response));
+                return response.IsSuccesful ? Ok() : StatusCode(500, response);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+                return StatusCode(500, new Response { IsSuccesful = false, ErrorMessage = ex.Message });
             }
         }
 
@@ -69,15 +58,16 @@ namespace BT_Remunerare.Controllers
             {
                 IList<VendorDTO> vendorDTOs = _vendorLogic.GetAllVendors();
                 IList<VendorViewModel> vendorViewModels = _vendorControllerHelper.BuildListViewModel(vendorDTOs);
-                return Ok(vendorViewModels);            }
+                return Ok(vendorViewModels);
+            }
             catch (Exception ex)
             {
-                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+                return StatusCode(500, new Response { IsSuccesful = false, ErrorMessage = ex.Message });
             }
         }
 
         [HttpGet]
-        [Route("GetVendorById")]
+        [Route("GetVendorById/{vendorId}")]
         public IActionResult GetVendorById(int vendorId)
         {
             try
@@ -88,7 +78,7 @@ namespace BT_Remunerare.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+                return StatusCode(500, new Response { IsSuccesful = false, ErrorMessage = ex.Message });
             }
         }
 
@@ -100,15 +90,11 @@ namespace BT_Remunerare.Controllers
             {
                 VendorDTO vendorDTO = _vendorControllerHelper.BuildDTO(vendorViewModel);
                 Response response = _vendorLogic.UpdateVendor(vendorDTO);
-                if (response.IsSuccesful)
-                {
-                    return Ok();
-                }
-                return StatusCode(500, (response));
+                return response.IsSuccesful ? Ok() : StatusCode(500, response);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+                return StatusCode(500, new Response { IsSuccesful = false, ErrorMessage = ex.Message });
             }
         }
     }

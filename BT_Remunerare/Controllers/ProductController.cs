@@ -1,7 +1,4 @@
-﻿using BT_Remunerare.BL.Classes;
-using BT_Remunerare.BL.Interfaces;
-using BT_Remunerare.DAL.Entities;
-using BT_Remunerare.Helpers.Classes;
+﻿using BT_Remunerare.BL.Interfaces;
 using BT_Remunerare.Helpers.Interfaces;
 using BT_Remunerare.Models;
 using BT_Remunerare.TL.Common;
@@ -31,35 +28,27 @@ namespace BT_Remunerare.Controllers
             {
                 ProductDTO productDTO = _productControllerHelper.BuildDTO(productViewModel);
                 Response response = _productLogic.AddProduct(productDTO);
-                if (response.IsSuccesful)
-                {
-                    return Ok();
-                }
-                return StatusCode(500, (response));
+                return response.IsSuccesful ? Ok() : StatusCode(500, response);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+                return StatusCode(500, new Response { IsSuccesful = false, ErrorMessage = ex.Message });
             }
         }
 
         [HttpPost]
-        [Route("DeleteProduct")]
+        [Route("DeleteProduct/{productId}")]
         public IActionResult DeleteProduct(int productId)
         {
             try
             {
                 Response response = _productLogic.DeleteProduct(productId);
 
-                if (response.IsSuccesful)
-                {
-                    return Ok();
-                }
-                return StatusCode(500, (response));
+                return response.IsSuccesful ? Ok() : StatusCode(500, response);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+                return StatusCode(500, new Response { IsSuccesful = false, ErrorMessage = ex.Message });
             }
         }
 
@@ -75,12 +64,12 @@ namespace BT_Remunerare.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+                return StatusCode(500, new Response { IsSuccesful = false, ErrorMessage = ex.Message });
             }
         }
 
         [HttpGet]
-        [Route("GetProductById")]
+        [Route("GetProductById/{productId}")]
         public IActionResult GetProductById(int productId)
         {
             try
@@ -91,7 +80,7 @@ namespace BT_Remunerare.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+                return StatusCode(500, new Response { IsSuccesful = false, ErrorMessage = ex.Message });
             }
         }
 
@@ -103,15 +92,11 @@ namespace BT_Remunerare.Controllers
             {
                 ProductDTO productDTO = _productControllerHelper.BuildDTO(productViewModel);
                 Response response = _productLogic.UpdateProduct(productDTO);
-                if (response.IsSuccesful)
-                {
-                    return Ok();
-                }
-                return StatusCode(500, (response));
+                return response.IsSuccesful ? Ok() : StatusCode(500, response);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+                return StatusCode(500, new Response { IsSuccesful = false, ErrorMessage = ex.Message });
             }
         }
     }

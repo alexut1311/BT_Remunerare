@@ -1,7 +1,4 @@
-﻿using BT_Remunerare.BL.Classes;
-using BT_Remunerare.BL.Interfaces;
-using BT_Remunerare.DAL.Entities;
-using BT_Remunerare.Helpers.Classes;
+﻿using BT_Remunerare.BL.Interfaces;
 using BT_Remunerare.Helpers.Interfaces;
 using BT_Remunerare.Models;
 using BT_Remunerare.TL.Common;
@@ -32,34 +29,26 @@ namespace BT_Remunerare.Controllers
                 SalesRemunerationRuleDTO saleRemunerationDTO = _saleRemunerationControllerHelper.BuildDTO(saleRemunerationViewModel);
                 Response response = _saleRemunerationLogic.AddSalesRemuneration(saleRemunerationDTO);
 
-                if (response.IsSuccesful)
-                {
-                    return Ok();
-                }
-                return StatusCode(500, (response));
+                return response.IsSuccesful ? Ok() : StatusCode(500, response);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+                return StatusCode(500, new Response { IsSuccesful = false, ErrorMessage = ex.Message });
             }
         }
 
         [HttpPost]
-        [Route("DeleteSalesRemuneration")]
+        [Route("DeleteSalesRemuneration/{saleRemunerationId}")]
         public IActionResult DeleteSalesRemuneration(int saleRemunerationId)
         {
             try
             {
                 Response response = _saleRemunerationLogic.DeleteSalesRemuneration(saleRemunerationId);
-                if (response.IsSuccesful)
-                {
-                    return Ok();
-                }
-                return StatusCode(500, (response));
+                return response.IsSuccesful ? Ok() : StatusCode(500, response);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+                return StatusCode(500, new Response { IsSuccesful = false, ErrorMessage = ex.Message });
             }
         }
 
@@ -75,7 +64,7 @@ namespace BT_Remunerare.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+                return StatusCode(500, new Response { IsSuccesful = false, ErrorMessage = ex.Message });
             }
         }
 
@@ -91,12 +80,12 @@ namespace BT_Remunerare.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+                return StatusCode(500, new Response { IsSuccesful = false, ErrorMessage = ex.Message });
             }
         }
 
         [HttpGet]
-        [Route("GetSalesRemunerationById")]
+        [Route("GetSalesRemunerationById/{saleRemunerationId}")]
         public IActionResult GetSalesRemunerationById(int saleRemunerationId)
         {
             try
@@ -107,7 +96,7 @@ namespace BT_Remunerare.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+                return StatusCode(500, new Response { IsSuccesful = false, ErrorMessage = ex.Message });
             }
         }
 
@@ -120,15 +109,11 @@ namespace BT_Remunerare.Controllers
                 SalesRemunerationRuleDTO saleRemunerationDTO = _saleRemunerationControllerHelper.BuildDTO(saleRemunerationViewModel);
 
                 Response response = _saleRemunerationLogic.UpdateSalesRemuneration(saleRemunerationDTO);
-                if (response.IsSuccesful)
-                {
-                    return Ok();
-                }
-                return StatusCode(500, (response));
+                return response.IsSuccesful ? Ok() : StatusCode(500, response);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+                return StatusCode(500, new Response { IsSuccesful = false, ErrorMessage = ex.Message });
             }
         }
     }

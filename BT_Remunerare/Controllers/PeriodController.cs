@@ -1,11 +1,9 @@
 ﻿using BT_Remunerare.BL.Interfaces;
-using BT_Remunerare.DAL.Entities;
 using BT_Remunerare.Helpers.Interfaces;
 using BT_Remunerare.Models;
 using BT_Remunerare.TL.Common;
 using BT_Remunerare.TL.DTO;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
 
 namespace BT_Remunerare.Controllers
 {
@@ -30,34 +28,26 @@ namespace BT_Remunerare.Controllers
             {
                 PeriodDTO periodDTO = _periodControllerHelper.BuildDTO(periodViewModel);
                 Response response = _periodLogic.AddPeriod(periodDTO);
-                if (response.IsSuccesful)
-                {
-                    return Ok();
-                }
-                return StatusCode(500, (response));
+                return response.IsSuccesful ? Ok() : StatusCode(500, response);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+                return StatusCode(500, new Response { IsSuccesful = false, ErrorMessage = ex.Message });
             }
         }
 
         [HttpPost]
-        [Route("DeletePeriod")]
+        [Route("DeletePeriod/{periodId}")]
         public IActionResult DeletePeriod(int periodId)
         {
             try
             {
                 Response response = _periodLogic.DeletePeriod(periodId);
-                if (response.IsSuccesful)
-                {
-                    return Ok();
-                }
-                return StatusCode(500, (response));
+                return response.IsSuccesful ? Ok() : StatusCode(500, response);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+                return StatusCode(500, new Response { IsSuccesful = false, ErrorMessage = ex.Message });
             }
         }
 
@@ -73,7 +63,7 @@ namespace BT_Remunerare.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+                return StatusCode(500, new Response { IsSuccesful = false, ErrorMessage = ex.Message });
             }
         }
 
@@ -89,12 +79,12 @@ namespace BT_Remunerare.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+                return StatusCode(500, new Response { IsSuccesful = false, ErrorMessage = ex.Message });
             }
         }
 
         [HttpGet]
-        [Route("GetPeriodById")]
+        [Route("GetPeriodById/{periodId}")]
         public IActionResult GetPeriodById(int periodId)
         {
             try
@@ -105,7 +95,7 @@ namespace BT_Remunerare.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+                return StatusCode(500, new Response { IsSuccesful = false, ErrorMessage = ex.Message });
             }
         }
 
@@ -117,15 +107,11 @@ namespace BT_Remunerare.Controllers
             {
                 PeriodDTO periodDTO = _periodControllerHelper.BuildDTO(periodViewModel);
                 Response response = _periodLogic.UpdatePeriod(periodDTO);
-                if (response.IsSuccesful)
-                {
-                    return Ok();
-                }
-                return StatusCode(500, (response));
+                return response.IsSuccesful ? Ok() : StatusCode(500, response);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, (new Response { IsSuccesful = false, ErrorMessage = ex.Message }));
+                return StatusCode(500, new Response { IsSuccesful = false, ErrorMessage = ex.Message });
             }
         }
     }
