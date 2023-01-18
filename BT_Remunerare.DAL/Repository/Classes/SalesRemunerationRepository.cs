@@ -127,5 +127,17 @@ namespace BT_Remunerare.DAL.Repository.Classes
                 return new Response { IsSuccesful = false, ErrorMessage = ex.Message };
             }
         }
+
+        public SalesRemunerationRuleDTO GetSalesRemunerationByPeriodAndProductId(int periodId, int productId)
+        {
+            SalesRemunerationRuleDTO salesRemunerationRuleDTOs = _applicationDBContext.SalesRemunerationRules.Where(x => x.PeriodId == periodId && x.ProductId == productId).Select(salesRemunerationRule => new SalesRemunerationRuleDTO
+            {
+                RemunerationId = salesRemunerationRule.RemunerationId,
+                PeriodId = salesRemunerationRule.PeriodId,
+                ProductId = salesRemunerationRule.ProductId,
+                Remuneration = salesRemunerationRule.Remuneration,
+            }).FirstOrDefault();
+            return salesRemunerationRuleDTOs;
+        }
     }
 }

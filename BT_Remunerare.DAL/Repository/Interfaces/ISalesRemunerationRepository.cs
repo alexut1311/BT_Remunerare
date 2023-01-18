@@ -10,5 +10,6 @@ namespace BT_Remunerare.DAL.Repository.Interfaces
         Response UpdateSalesRemuneration(SalesRemunerationRuleDTO salesRemunerationDTO);
         Response DeleteSalesRemuneration(int salesRemunerationId);
         IList<SalesRemunerationRuleDTO> GetAllSalesRemunerationRules();
+        SalesRemunerationRuleDTO GetSalesRemunerationByPeriodAndProductId(int periodId, int productId);
     }
 }

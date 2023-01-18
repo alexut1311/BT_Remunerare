@@ -30,11 +30,13 @@ namespace BT_Remunerare
             string connectionString = Configuration.GetSection("AppSettings")["DatabaseConnection"];
             _ = services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(connectionString));
             _ = services.AddAuthentication(IISDefaults.AuthenticationScheme);
-            services.AddCors(options => {
+            _ = services.AddCors(options =>
+            {
                 options.AddPolicy(
                    name: "AllowRequests",
-                   builder => {
-                       builder.WithOrigins("https://localhost:44456/")
+                   builder =>
+                   {
+                       _ = builder.WithOrigins("https://localhost:44456/")
                                      .AllowAnyHeader()
                                      .AllowAnyMethod()
                                      .AllowAnyOrigin();

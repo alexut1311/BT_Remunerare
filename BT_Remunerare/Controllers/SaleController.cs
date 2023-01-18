@@ -114,5 +114,21 @@ namespace BT_Remunerare.Controllers
                 return StatusCode(500, new Response { IsSuccesful = false, ErrorMessage = ex.Message });
             }
         }
+
+        [HttpGet]
+        [Route("GetTotalSalesValueByPeriodId/{periodId}")]
+        public IActionResult GetTotalSalesValueByPeriodId(int periodId)
+        {
+            try
+            {
+                TotalSalesDTO totalSalesValueDTO = _saleLogic.GetTotalSalesValueByPeriodId(periodId);
+                TotalSalesViewModel totalSalesValueViewModel = _saleControllerHelper.BuildTotalSalesViewModel(totalSalesValueDTO);
+                return Ok(totalSalesValueViewModel);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new Response { IsSuccesful = false, ErrorMessage = ex.Message });
+            }
+        }
     }
 }

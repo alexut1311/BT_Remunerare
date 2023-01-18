@@ -10,5 +10,6 @@ namespace BT_Remunerare.BL.Interfaces
         Response UpdateSale(SaleDTO saleDTO);
         Response DeleteSale(int saleId);
         IList<SaleDTO> GetAllSales();
+        TotalSalesDTO GetTotalSalesValueByPeriodId(int periodId);
     }
 }
