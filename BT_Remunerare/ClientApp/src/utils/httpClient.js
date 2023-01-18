@@ -26,10 +26,10 @@ const httpPost = (url, content = {}) => {
 /**
  * Perform a DELETE operation
  * @param {string} url relative to the host name
- * @param {object} content the data to send
+ * @param {object} id the id to send
  */
-const httpDelete = (url, content = {}) => {
-  return fetch(`${backEndURL}${url}/${content}`, {
+const httpDelete = (url, id = 0) => {
+  return fetch(`${backEndURL}${url}/${id}`, {
     method: "DELETE", // GET, *POST, PUT, DELETE, etc.
     headers: {
       "Content-Type": "application/json", // *application/json, application/x-www-form-urlencoded

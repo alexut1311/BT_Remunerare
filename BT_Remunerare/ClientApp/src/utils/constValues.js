@@ -1,0 +1,11 @@
+export const PERIOD_MODAL_TEXT = "Adauga o perioada noua";
+export const PRODUCT_MODAL_TEXT = "Adauga un produs nou";
+export const VENDOR_MODAL_TEXT = "Adauga un vanzator nou";
+export const SALE_MODAL_TEXT = "Adauga o vanzare noua";
+export const REMUNERATION_MODAL_TEXT = "Adauga o remuneratie noua";
+export const PERIOD_HEADER_TEXT = "Perioade";
+export const PRODUCT_HEADER_TEXT = "Produse";
+export const VENDOR_HEADER_TEXT = "Vanzatori";
+export const SALE_HEADER_TEXT = "Vanzari";
+export const REMUNERATION_HEADER_TEXT = "Remuneratii";
+export const MODAL_CANCEL_TEXT = "Inchide";

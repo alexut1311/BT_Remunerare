@@ -9,6 +9,13 @@ import {
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import "./NavMenu.css";
+import {
+  PERIOD_HEADER_TEXT,
+  PRODUCT_HEADER_TEXT,
+  REMUNERATION_HEADER_TEXT,
+  SALE_HEADER_TEXT,
+  VENDOR_HEADER_TEXT,
+} from "../utils/constValues";
 
 export class NavMenu extends Component {
   static displayName = NavMenu.name;
@@ -53,7 +60,27 @@ export class NavMenu extends Component {
               </NavItem>
               <NavItem>
                 <NavLink tag={Link} className="text-dark" to="/periods">
-                  Perioade
+                  {PERIOD_HEADER_TEXT}
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink tag={Link} className="text-dark" to="/products">
+                  {PRODUCT_HEADER_TEXT}
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink tag={Link} className="text-dark" to="/sales">
+                  {SALE_HEADER_TEXT}
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink tag={Link} className="text-dark" to="/remunerations">
+                  {REMUNERATION_HEADER_TEXT}
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink tag={Link} className="text-dark" to="/vendors">
+                  {VENDOR_HEADER_TEXT}
                 </NavLink>
               </NavItem>
             </ul>

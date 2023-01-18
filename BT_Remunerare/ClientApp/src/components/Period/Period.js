@@ -1,28 +1,26 @@
 import React, { Component } from "react";
 import httpClient from "../../utils/httpClient";
-import { CreateNewPeriodModal } from "./CreateNewPeriodModal";
-import MaterialReactTable from "material-react-table";
+import { ApplicationTable } from "../Table/ApplicationTable";
+import { CreateModal } from "../Modal/CreateModal";
 import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  MenuItem,
-  Stack,
-  TextField,
-  Tooltip,
-} from "@mui/material";
-import { Delete, Edit } from "@mui/icons-material";
+  MODAL_CANCEL_TEXT,
+  PERIOD_HEADER_TEXT,
+  PERIOD_MODAL_TEXT,
+} from "../../utils/constValues";
 
 export class Period extends Component {
   static displayName = Period.name;
 
   constructor(props) {
     super(props);
-    this.state = { periods: [], loading: true, createModalOpen: false };
+    this.state = {
+      periods: [],
+      loading: true,
+      periodId: 0,
+      year: 0,
+      month: 0,
+      createModalOpen: false,
+    };
     this.renderPeriodsTable = this.renderPeriodsTable.bind(this);
   }
 
@@ -35,13 +33,16 @@ export class Period extends Component {
 
     const columns = [
       {
-        accessorKey: "id",
-        header: "ID",
+        accessorKey: "periodId",
+        header: "Id",
         enableColumnOrdering: false,
         enableEditing: false, //disable editing on this column
         enableSorting: false,
+        editable: "never",
+        enableHiding: false,
         hidden: true,
         size: 80,
+        isDisabledToEditing: true,
       },
       {
         accessorKey: "year",
@@ -54,63 +55,41 @@ export class Period extends Component {
         size: 140,
       },
     ];
-    const modalText = "Adauga o perioada noua";
-    const modalCancelText = "Inchide";
+
+    const openModal = () => {
+      this.setState({ createModalOpen: true });
+    };
+
+    const setComponentState = (e) => {
+      this.setState({ [e.target.name]: e.target.value });
+    };
 
     const periodModal = (
-      <CreateNewPeriodModal
+      <CreateModal
         columns={columns}
         open={this.state.createModalOpen}
         onClose={() => this.setState({ createModalOpen: false })}
-        modalText={modalText}
-        modalCancelText={modalCancelText}
+        modalText={PERIOD_MODAL_TEXT}
+        modalCancelText={MODAL_CANCEL_TEXT}
+        setComponentState={setComponentState}
         //onSubmit={handleCreateNewRow}
+      />
+    );
+
+    const applicationTable = (
+      <ApplicationTable
+        columns={columns}
+        data={periods}
+        handleDeleteRow={handleDeleteRow}
+        modalText={PERIOD_MODAL_TEXT}
+        openModal={openModal}
+        initialState={{ columnVisibility: { periodId: false } }}
       />
     );
 
     return (
       <>
-        <MaterialReactTable
-          displayColumnDefOptions={{
-            "mrt-row-actions": {
-              muiTableHeadCellProps: {
-                align: "center",
-              },
-              size: 120,
-            },
-          }}
-          columns={columns}
-          data={periods}
-          editingMode="modal" //default
-          enableColumnOrdering
-          enableEditing
-          //onEditingRowSave={handleSaveRowEdits}
-          //onEditingRowCancel={handleCancelRowEdits}
-          renderRowActions={({ row, table }) => (
-            <Box sx={{ display: "flex", gap: "1rem" }}>
-              <Tooltip arrow placement="left" title="Edit">
-                <IconButton onClick={() => table.setEditingRow(row)}>
-                  <Edit />
-                </IconButton>
-              </Tooltip>
-              <Tooltip arrow placement="right" title="Delete">
-                <IconButton color="error" onClick={() => handleDeleteRow(row)}>
-                  <Delete />
-                </IconButton>
-              </Tooltip>
-            </Box>
-          )}
-          renderTopToolbarCustomActions={() => (
-            <Button
-              color="secondary"
-              onClick={() => this.setState({ createModalOpen: true })}
-              variant="contained"
-            >
-              {modalText}
-            </Button>
-          )}
-          initialState={{ columnVisibility: { id: false } }}
-        />
+        {applicationTable}
         {periodModal}
       </>
     );
@@ -125,7 +104,12 @@ export class Period extends Component {
       this.renderPeriodsTable(this.state.periods)
     );
 
-    return <div>{contents}</div>;
+    return (
+      <div>
+        <h1>{PERIOD_HEADER_TEXT}</h1>
+        {contents}
+      </div>
+    );
   }
 
   async populatePeriodData() {

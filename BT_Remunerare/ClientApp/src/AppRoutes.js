@@ -1,6 +1,9 @@
 import { Period } from "./components/Period/Period";
-import { FetchData } from "./components/FetchData";
 import { Home } from "./components/Home";
+import { Product } from "./components/Product/Product";
+import { Vendor } from "./components/Vendor/Vendor";
+import { Sale } from "./components/Sale/Sale";
+import { SaleRemuneration } from "./components/SaleRemuneration/SaleRemuneration";
 
 const AppRoutes = [
   {
@@ -10,6 +13,22 @@ const AppRoutes = [
   {
     path: "/periods",
     element: <Period />,
+  },
+  {
+    path: "/products",
+    element: <Product />,
+  },
+  {
+    path: "/vendors",
+    element: <Vendor />,
+  },
+  {
+    path: "/sales",
+    element: <Sale />,
+  },
+  {
+    path: "/remunerations",
+    element: <SaleRemuneration />,
   },
 ];
 

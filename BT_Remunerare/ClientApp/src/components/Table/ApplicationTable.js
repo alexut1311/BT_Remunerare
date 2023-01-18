@@ -27,15 +27,16 @@ export class ApplicationTable extends Component {
     return (
       <>
         <MaterialReactTable
+          columns={this.props.columns}
           displayColumnDefOptions={{
             "mrt-row-actions": {
               muiTableHeadCellProps: {
-                align: "center",
+                align: "left",
               },
-              size: 120,
+              size: 40,
+              header: "Actiuni",
             },
           }}
-          columns={this.props.columns}
           data={this.props.data}
           editingMode="modal" //default
           enableColumnOrdering
@@ -62,15 +63,14 @@ export class ApplicationTable extends Component {
           renderTopToolbarCustomActions={() => (
             <Button
               color="secondary"
-              onClick={() => this.setState({ createModalOpen: true })}
+              onClick={this.props.openModal}
               variant="contained"
             >
               {this.props.modalText}
             </Button>
           )}
-          initialState={{ columnVisibility: { id: false } }}
+          initialState={this.props.initialState}
         />
-        {this.props.tableModal}
       </>
     );
   }

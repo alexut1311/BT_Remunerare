@@ -34,14 +34,19 @@ export class CreateModal extends Component {
                 gap: "1.5rem",
               }}
             >
-              {this.props.columns.map((column) => (
-                <TextField
-                  key={column.accessorKey}
-                  label={column.header}
-                  name={column.accessorKey}
-                  onChange={(e) => this.props.setComponentState(e)}
-                />
-              ))}
+              {this.props.columns.map((column) =>
+                column.isDisabledToEditing ? (
+                  <></>
+                ) : (
+                  <TextField
+                    key={column.accessorKey}
+                    label={column.header}
+                    name={column.accessorKey}
+                    disabled={column.isDisabledToEditing}
+                    onChange={(e) => this.props.setComponentState(e)}
+                  />
+                )
+              )}
             </Stack>
           </form>
         </DialogContent>
