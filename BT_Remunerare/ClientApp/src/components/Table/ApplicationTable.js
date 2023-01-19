@@ -46,11 +46,15 @@ export class ApplicationTable extends Component {
           renderRowActions={({ row, table }) => (
             <Box sx={{ display: "flex", gap: "1rem" }}>
               <Tooltip arrow placement="left" title="Edit">
-                {this.props.editButton(row) || (
-                  <IconButton onClick={() => table.setEditingRow(row)}>
-                    <Edit />
-                  </IconButton>
-                )}
+                <IconButton
+                  onClick={() =>
+                    this.props.editButton
+                      ? this.props.editButton(row)
+                      : table.setEditingRow(row)
+                  }
+                >
+                  <Edit />
+                </IconButton>
               </Tooltip>
               <Tooltip arrow placement="right" title="Delete">
                 <IconButton

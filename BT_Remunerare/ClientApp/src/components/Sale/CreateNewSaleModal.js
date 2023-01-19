@@ -19,18 +19,9 @@ import Select from "@mui/material/Select";
 export class CreateNewSaleModal extends Component {
   static displayName = CreateNewSaleModal.name;
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      periodId: 0,
-      productId: 0,
-      vendorId: 0,
-    };
-  }
-
   render() {
     const handleSubmit = () => {
-      this.props.onSubmit({ ...this.state });
+      this.props.onSubmit();
       this.props.onClose();
     };
 
@@ -54,11 +45,10 @@ export class CreateNewSaleModal extends Component {
                   <Select
                     labelId="period-dropdown-select-label"
                     id="period-dropdown-select"
-                    value={this.state.periodId}
                     label="Perioada"
-                    onChange={(e) =>
-                      this.setState({ periodId: e.target.value })
-                    }
+                    name="periodId"
+                    value={this.props.periodId}
+                    onChange={(e) => this.props.setComponentState(e)}
                   >
                     {this.props.periods.map((period) => (
                       <MenuItem value={period.periodId} key={period.periodId}>
@@ -76,11 +66,10 @@ export class CreateNewSaleModal extends Component {
                   <Select
                     labelId="vendor-dropdown-select-label"
                     id="vendor-dropdown-select"
-                    value={this.state.vendorId}
                     label="Vanzatorul"
-                    onChange={(e) =>
-                      this.setState({ vendorId: e.target.value })
-                    }
+                    name="vendorId"
+                    value={this.props.vendorId}
+                    onChange={(e) => this.props.setComponentState(e)}
                   >
                     {this.props.vendors.map((vendor) => (
                       <MenuItem value={vendor.vendorId} key={vendor.vendorId}>
@@ -91,18 +80,17 @@ export class CreateNewSaleModal extends Component {
                 </FormControl>
               </Box>
               <Box sx={{ minWidth: 120 }}>
-                <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+                <FormControl variant="standard" sx={{ m: 1, minWidth: 400 }}>
                   <InputLabel id="period-dropdown-select-label">
                     Produsul
                   </InputLabel>
                   <Select
                     labelId="product-dropdown-select-label"
                     id="product-dropdown-select"
-                    value={this.state.productId}
                     label="Produsul"
-                    onChange={(e) =>
-                      this.setState({ productId: e.target.value })
-                    }
+                    name="productId"
+                    value={this.props.productId}
+                    onChange={(e) => this.props.setComponentState(e)}
                   >
                     {this.props.products.map((product) => (
                       <MenuItem
@@ -120,6 +108,7 @@ export class CreateNewSaleModal extends Component {
                 label="Numar produse"
                 name="numberOfProducts"
                 type="number"
+                value={this.props.numberOfProducts}
                 onChange={(e) => this.props.setComponentState(e)}
               />
             </Stack>

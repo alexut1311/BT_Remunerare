@@ -8,7 +8,9 @@ import {
   REMUNERATION_HEADER_TEXT,
   REMUNERATION_MODAL_TEXT,
 } from "../../utils/constValues";
+import { IconButton, MenuItem } from "@mui/material";
 import { CreateNewSaleRemunerationModal } from "./CreateNewSaleRemunerationModal";
+import { Edit } from "@mui/icons-material";
 
 export class SaleRemuneration extends Component {
   static displayName = SaleRemuneration.name;
@@ -35,7 +37,6 @@ export class SaleRemuneration extends Component {
       this.populateSaleRemunerationData.bind(this);
     this.deleteSaleRemunerationById =
       this.deleteSaleRemunerationById.bind(this);
-    this.editSaleRemuneration = this.editSaleRemuneration.bind(this);
   }
 
   componentDidMount() {
@@ -116,23 +117,21 @@ export class SaleRemuneration extends Component {
         periods={this.state.allSelectablePeriods}
         products={this.state.allProducts}
         open={this.state.editModalOpen}
-        remuneration={this.state.remuneration}
         onClose={() => this.setState({ editModalOpen: false })}
         modalText={REMUNERATION_EDIT_MODAL_TEXT}
         modalCancelText={MODAL_CANCEL_TEXT}
-        onSubmit={this.editSaleRemuneration}
+        onSubmit={this.createNewSaleRemuneration}
         setComponentState={setComponentState}
       />
     );
 
     const editButton = (row) => {
-      this.setState({
-        remunerationId: row.original.remunerationId,
-        periodId: row.original.periodId,
-        productId: row.original.productId,
-        remuneration: row.original.remuneration,
-        editModalOpen: true,
-      });
+      this.setState({ periodId: row.periodId, productId: row.productId });
+      return (
+        <IconButton onClick={() => this.setState({ editModalOpen: true })}>
+          <Edit />
+        </IconButton>
+      );
     };
 
     const applicationTable = (
@@ -196,12 +195,12 @@ export class SaleRemuneration extends Component {
     });
   }
 
-  async createNewSaleRemuneration() {
+  async createNewSaleRemuneration(saleRemuneration) {
     const response = await httpClient.post(
       "/salesRemunerations/AddSalesRemuneration",
       {
-        periodId: this.state.periodId,
-        productId: this.state.productId,
+        periodId: saleRemuneration.periodId,
+        productId: saleRemuneration.productId,
         remuneration: this.state.remuneration,
       }
     );
@@ -213,20 +212,6 @@ export class SaleRemuneration extends Component {
     const response = await httpClient.delete(
       "/salesRemunerations/DeleteSalesRemuneration",
       remunerationId
-    );
-    this.setState({ loading: true });
-    this.populateSaleRemunerationData();
-  }
-
-  async editSaleRemuneration() {
-    const response = await httpClient.post(
-      "/salesRemunerations/UpdateSalesRemuneration",
-      {
-        remunerationId: this.state.remunerationId,
-        periodId: this.state.periodId,
-        productId: this.state.productId,
-        remuneration: this.state.remuneration,
-      }
     );
     this.setState({ loading: true });
     this.populateSaleRemunerationData();

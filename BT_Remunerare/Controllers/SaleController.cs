@@ -28,7 +28,7 @@ namespace BT_Remunerare.Controllers
             {
                 SaleDTO saleDTO = _saleControllerHelper.BuildDTO(saleViewModel);
                 Response response = _saleLogic.AddSale(saleDTO);
-                return response.IsSuccesful ? Ok() : StatusCode(500, response);
+                return response.IsSuccesful ? Ok(response) : StatusCode(500, response);
             }
             catch (Exception ex)
             {
