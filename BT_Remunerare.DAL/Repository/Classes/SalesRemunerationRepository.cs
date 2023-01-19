@@ -125,7 +125,7 @@ namespace BT_Remunerare.DAL.Repository.Classes
                 {
                     salesRemunerationById.PeriodId = (salesRemunerationById.PeriodId == salesRemunerationRuleDTO.PeriodId) || salesRemunerationRuleDTO.PeriodId == 0 ? salesRemunerationById.PeriodId : salesRemunerationRuleDTO.PeriodId;
                     salesRemunerationById.ProductId = (salesRemunerationById.ProductId == salesRemunerationRuleDTO.ProductId) || salesRemunerationRuleDTO.ProductId == 0 ? salesRemunerationById.ProductId : salesRemunerationRuleDTO.ProductId;
-                    salesRemunerationById.Remuneration = (salesRemunerationById.Remuneration == salesRemunerationRuleDTO.Remuneration) || salesRemunerationRuleDTO.Remuneration != 0 ? salesRemunerationById.Remuneration : salesRemunerationRuleDTO.Remuneration;
+                    salesRemunerationById.Remuneration = (salesRemunerationById.Remuneration == salesRemunerationRuleDTO.Remuneration) || salesRemunerationRuleDTO.Remuneration == 0 ? salesRemunerationById.Remuneration : salesRemunerationRuleDTO.Remuneration;
                     _ = _applicationDBContext.SaveChanges();
                     return new Response { IsSuccesful = true };
                 }
