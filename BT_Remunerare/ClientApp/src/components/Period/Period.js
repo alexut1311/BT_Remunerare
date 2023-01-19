@@ -23,6 +23,7 @@ export class Period extends Component {
     this.createNewPeriod = this.createNewPeriod.bind(this);
     this.populatePeriodData = this.populatePeriodData.bind(this);
     this.deletePeriodById = this.deletePeriodById.bind(this);
+    this.editPeriodById = this.editPeriodById.bind(this);
   }
 
   componentDidMount() {
@@ -37,6 +38,10 @@ export class Period extends Component {
       if (result === true) {
         this.deletePeriodById(row.original.periodId);
       }
+    };
+
+    const handleSaveRowEdits = (row) => {
+      this.editPeriodById(row.values);
     };
 
     const columns = [
@@ -91,6 +96,7 @@ export class Period extends Component {
         handleDeleteRow={handleDeleteRow}
         modalText={PERIOD_MODAL_TEXT}
         openModal={openModal}
+        handleSaveRowEdits={handleSaveRowEdits}
         initialState={{ columnVisibility: { periodId: false } }}
       />
     );
@@ -137,6 +143,15 @@ export class Period extends Component {
 
   async deletePeriodById(periodId) {
     const response = await httpClient.delete("/period/DeletePeriod", periodId);
+    this.setState({ loading: true });
+    this.populatePeriodData();
+  }
+
+  async editPeriodById(updatedPeriod) {
+    const response = await httpClient.post(
+      "/period/UpdatePeriod",
+      updatedPeriod
+    );
     this.setState({ loading: true });
     this.populatePeriodData();
   }

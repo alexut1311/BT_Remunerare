@@ -6,11 +6,9 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  IconButton,
   MenuItem,
   Stack,
   TextField,
-  Tooltip,
 } from "@mui/material";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
@@ -19,17 +17,9 @@ import Select from "@mui/material/Select";
 export class CreateNewSaleRemunerationModal extends Component {
   static displayName = CreateNewSaleRemunerationModal.name;
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      periodId: 0,
-      productId: 0,
-    };
-  }
-
   render() {
     const handleSubmit = () => {
-      this.props.onSubmit({ ...this.state });
+      this.props.onSubmit();
       this.props.onClose();
     };
 
@@ -53,11 +43,10 @@ export class CreateNewSaleRemunerationModal extends Component {
                   <Select
                     labelId="period-dropdown-select-label"
                     id="period-dropdown-select"
-                    value={this.state.periodId}
                     label="Perioada"
-                    onChange={(e) =>
-                      this.setState({ periodId: e.target.value })
-                    }
+                    name="periodId"
+                    value={this.props.periodId}
+                    onChange={(e) => this.props.setComponentState(e)}
                   >
                     {this.props.periods.map((period) => (
                       <MenuItem value={period.periodId} key={period.periodId}>
@@ -75,11 +64,10 @@ export class CreateNewSaleRemunerationModal extends Component {
                   <Select
                     labelId="product-dropdown-select-label"
                     id="product-dropdown-select"
-                    value={this.state.productId}
                     label="Produsul"
-                    onChange={(e) =>
-                      this.setState({ productId: e.target.value })
-                    }
+                    name="productId"
+                    value={this.props.productId}
+                    onChange={(e) => this.props.setComponentState(e)}
                   >
                     {this.props.products.map((product) => (
                       <MenuItem
@@ -97,6 +85,7 @@ export class CreateNewSaleRemunerationModal extends Component {
                 label="Remunerare"
                 name="remuneration"
                 type="number"
+                value={this.props.remuneration}
                 onChange={(e) => this.props.setComponentState(e)}
               />
             </Stack>

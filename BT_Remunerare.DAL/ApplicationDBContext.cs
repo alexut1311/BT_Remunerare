@@ -14,6 +14,5 @@ namespace BT_Remunerare.DAL
         public DbSet<Vendor> Vendors { get; set; }
         public DbSet<Period> Periods { get; set; }
         public DbSet<SalesRemunerationRule> SalesRemunerationRules { get; set; }
-
     }
 }

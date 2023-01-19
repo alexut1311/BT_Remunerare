@@ -1,18 +1,6 @@
 import React, { Component } from "react";
 import MaterialReactTable from "material-react-table";
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  MenuItem,
-  Stack,
-  TextField,
-  Tooltip,
-} from "@mui/material";
+import { Box, Button, IconButton, Tooltip } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
 
 export class ApplicationTable extends Component {
@@ -41,12 +29,18 @@ export class ApplicationTable extends Component {
           editingMode="modal" //default
           enableColumnOrdering
           enableEditing
-          //onEditingRowSave={handleSaveRowEdits}
+          onEditingRowSave={this.props.handleSaveRowEdits}
           //onEditingRowCancel={handleCancelRowEdits}
           renderRowActions={({ row, table }) => (
             <Box sx={{ display: "flex", gap: "1rem" }}>
               <Tooltip arrow placement="left" title="Edit">
-                <IconButton onClick={() => table.setEditingRow(row)}>
+                <IconButton
+                  onClick={() =>
+                    this.props.editButton
+                      ? this.props.editButton(row)
+                      : table.setEditingRow(row)
+                  }
+                >
                   <Edit />
                 </IconButton>
               </Tooltip>

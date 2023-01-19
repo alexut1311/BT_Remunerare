@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import httpClient from "../../utils/httpClient";
 import { ApplicationTable } from "../Table/ApplicationTable";
-import { CreateModal } from "../Modal/CreateModal";
 import {
   MODAL_CANCEL_TEXT,
+  SALE_EDIT_MODAL_TEXT,
   SALE_HEADER_TEXT,
   SALE_MODAL_TEXT,
 } from "../../utils/constValues";
@@ -31,6 +31,7 @@ export class Sale extends Component {
     this.createNewSale = this.createNewSale.bind(this);
     this.populateSaleData = this.populateSaleData.bind(this);
     this.deleteSaleById = this.deleteSaleById.bind(this);
+    this.editSale = this.editSale.bind(this);
   }
   componentDidMount() {
     this.populateSaleData();
@@ -99,7 +100,7 @@ export class Sale extends Component {
       this.setState({ [e.target.name]: e.target.value });
     };
 
-    const productModal = (
+    const createSaleModal = (
       <CreateNewSaleModal
         columns={columns}
         periods={this.state.periods}
@@ -114,6 +115,36 @@ export class Sale extends Component {
       />
     );
 
+    const editSaleModal = (
+      <CreateNewSaleModal
+        periodId={this.state.periodId}
+        productId={this.state.productId}
+        vendorId={this.state.vendorId}
+        periods={this.state.periods}
+        products={this.state.products}
+        vendors={this.state.vendors}
+        numberOfProducts={this.state.numberOfProducts}
+        open={this.state.editModalOpen}
+        remuneration={this.state.remuneration}
+        onClose={() => this.setState({ editModalOpen: false })}
+        modalText={SALE_EDIT_MODAL_TEXT}
+        modalCancelText={MODAL_CANCEL_TEXT}
+        onSubmit={this.editSale}
+        setComponentState={setComponentState}
+      />
+    );
+
+    const editButton = (row) => {
+      this.setState({
+        saleId: row.original.saleId,
+        periodId: row.original.periodId,
+        productId: row.original.productId,
+        vendorId: row.original.vendorId,
+        numberOfProducts: row.original.numberOfProducts,
+        editModalOpen: true,
+      });
+    };
+
     const applicationTable = (
       <ApplicationTable
         columns={columns}
@@ -122,13 +153,15 @@ export class Sale extends Component {
         modalText={SALE_MODAL_TEXT}
         openModal={openModal}
         initialState={{ columnVisibility: { saleId: false } }}
+        editButton={editButton}
       />
     );
 
     return (
       <>
         {applicationTable}
-        {productModal}
+        {createSaleModal}
+        {editSaleModal}
       </>
     );
   }
@@ -176,11 +209,11 @@ export class Sale extends Component {
     });
   }
 
-  async createNewSale(sale) {
+  async createNewSale() {
     const response = await httpClient.post("/sale/AddSale", {
-      periodId: sale.periodId,
-      productId: sale.productId,
-      vendorId: sale.productId,
+      periodId: this.state.periodId,
+      productId: this.state.productId,
+      vendorId: this.state.vendorId,
       numberOfProducts: this.state.numberOfProducts,
     });
     this.setState({ loading: true });
@@ -189,6 +222,18 @@ export class Sale extends Component {
 
   async deleteSaleById(saleId) {
     const response = await httpClient.delete("/sale/DeleteSale", saleId);
+    this.setState({ loading: true });
+    this.populateSaleData();
+  }
+
+  async editSale() {
+    const response = await httpClient.post("/sale/UpdateSale", {
+      saleId: this.state.saleId,
+      periodId: this.state.periodId,
+      productId: this.state.productId,
+      vendorId: this.state.vendorId,
+      numberOfProducts: this.state.numberOfProducts,
+    });
     this.setState({ loading: true });
     this.populateSaleData();
   }

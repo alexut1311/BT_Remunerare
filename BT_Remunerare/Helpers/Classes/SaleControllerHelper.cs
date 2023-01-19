@@ -74,7 +74,7 @@ namespace BT_Remunerare.Helpers.Classes
                         TotalSalesValue = vendorSale.TotalSalesValue
                     });
                 }
-                totalSalesViewModel.TotalSales.Add(sale.Key, vendorTotalSalesViewModel);
+                totalSalesViewModel.TotalSales.Add(sale.Key, vendorTotalSalesViewModel.OrderBy(x=>x.Vendor.VendorName).ToList());
             }
 
             return totalSalesViewModel;

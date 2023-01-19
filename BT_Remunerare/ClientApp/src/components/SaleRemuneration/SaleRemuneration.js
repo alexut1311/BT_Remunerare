@@ -1,13 +1,12 @@
 import React, { Component } from "react";
 import httpClient from "../../utils/httpClient";
 import { ApplicationTable } from "../Table/ApplicationTable";
-import { CreateModal } from "../Modal/CreateModal";
 import {
   MODAL_CANCEL_TEXT,
+  REMUNERATION_EDIT_MODAL_TEXT,
   REMUNERATION_HEADER_TEXT,
   REMUNERATION_MODAL_TEXT,
 } from "../../utils/constValues";
-import { MenuItem } from "@mui/material";
 import { CreateNewSaleRemunerationModal } from "./CreateNewSaleRemunerationModal";
 
 export class SaleRemuneration extends Component {
@@ -20,7 +19,10 @@ export class SaleRemuneration extends Component {
       loading: true,
       remunerationId: 0,
       remuneration: 0,
+      periodId: 0,
+      productId: 0,
       createModalOpen: false,
+      editModalOpen: false,
       allSelectablePeriods: [],
       allProducts: [],
     };
@@ -32,6 +34,7 @@ export class SaleRemuneration extends Component {
       this.populateSaleRemunerationData.bind(this);
     this.deleteSaleRemunerationById =
       this.deleteSaleRemunerationById.bind(this);
+    this.editSaleRemuneration = this.editSaleRemuneration.bind(this);
   }
 
   componentDidMount() {
@@ -92,7 +95,7 @@ export class SaleRemuneration extends Component {
       this.setState({ [e.target.name]: e.target.value });
     };
 
-    const productModal = (
+    const createSaleRemunerationModal = (
       <CreateNewSaleRemunerationModal
         periods={this.state.allSelectablePeriods}
         products={this.state.allProducts}
@@ -105,6 +108,32 @@ export class SaleRemuneration extends Component {
       />
     );
 
+    const editSaleRemunerationModal = (
+      <CreateNewSaleRemunerationModal
+        periodId={this.state.periodId}
+        productId={this.state.productId}
+        periods={this.state.allSelectablePeriods}
+        products={this.state.allProducts}
+        open={this.state.editModalOpen}
+        remuneration={this.state.remuneration}
+        onClose={() => this.setState({ editModalOpen: false })}
+        modalText={REMUNERATION_EDIT_MODAL_TEXT}
+        modalCancelText={MODAL_CANCEL_TEXT}
+        onSubmit={this.editSaleRemuneration}
+        setComponentState={setComponentState}
+      />
+    );
+
+    const editButton = (row) => {
+      this.setState({
+        remunerationId: row.original.remunerationId,
+        periodId: row.original.periodId,
+        productId: row.original.productId,
+        remuneration: row.original.remuneration,
+        editModalOpen: true,
+      });
+    };
+
     const applicationTable = (
       <ApplicationTable
         columns={columns}
@@ -113,13 +142,15 @@ export class SaleRemuneration extends Component {
         modalText={REMUNERATION_MODAL_TEXT}
         openModal={openModal}
         initialState={{ columnVisibility: { remunerationId: false } }}
+        editButton={editButton}
       />
     );
 
     return (
       <>
         {applicationTable}
-        {productModal}
+        {createSaleRemunerationModal}
+        {editSaleRemunerationModal}
       </>
     );
   }
@@ -164,12 +195,12 @@ export class SaleRemuneration extends Component {
     });
   }
 
-  async createNewSaleRemuneration(saleRemuneration) {
+  async createNewSaleRemuneration() {
     const response = await httpClient.post(
       "/salesRemunerations/AddSalesRemuneration",
       {
-        periodId: saleRemuneration.periodId,
-        productId: saleRemuneration.productId,
+        periodId: this.state.periodId,
+        productId: this.state.productId,
         remuneration: this.state.remuneration,
       }
     );
@@ -181,6 +212,20 @@ export class SaleRemuneration extends Component {
     const response = await httpClient.delete(
       "/salesRemunerations/DeleteSalesRemuneration",
       remunerationId
+    );
+    this.setState({ loading: true });
+    this.populateSaleRemunerationData();
+  }
+
+  async editSaleRemuneration() {
+    const response = await httpClient.post(
+      "/salesRemunerations/UpdateSalesRemuneration",
+      {
+        remunerationId: this.state.remunerationId,
+        periodId: this.state.periodId,
+        productId: this.state.productId,
+        remuneration: this.state.remuneration,
+      }
     );
     this.setState({ loading: true });
     this.populateSaleRemunerationData();

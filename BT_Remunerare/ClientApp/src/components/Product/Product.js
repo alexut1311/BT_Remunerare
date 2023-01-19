@@ -24,6 +24,7 @@ export class Product extends Component {
     this.createNewProduct = this.createNewProduct.bind(this);
     this.populateProductData = this.populateProductData.bind(this);
     this.deleteProductById = this.deleteProductById.bind(this);
+    this.editProductById = this.editProductById.bind(this);
   }
 
   componentDidMount() {
@@ -38,6 +39,10 @@ export class Product extends Component {
       if (result == true) {
         this.deleteProductById(row.original.productId);
       }
+    };
+
+    const handleSaveRowEdits = (row) => {
+      this.editProductById(row.values);
     };
 
     const columns = [
@@ -87,6 +92,7 @@ export class Product extends Component {
         handleDeleteRow={handleDeleteRow}
         modalText={PRODUCT_MODAL_TEXT}
         openModal={openModal}
+        handleSaveRowEdits={handleSaveRowEdits}
         initialState={{ columnVisibility: { productId: false } }}
       />
     );
@@ -134,6 +140,15 @@ export class Product extends Component {
     const response = await httpClient.delete(
       "/product/DeleteProduct",
       productId
+    );
+    this.setState({ loading: true });
+    this.populateProductData();
+  }
+
+  async editProductById(updatedProduct) {
+    const response = await httpClient.post(
+      "/product/UpdateProduct",
+      updatedProduct
     );
     this.setState({ loading: true });
     this.populateProductData();
