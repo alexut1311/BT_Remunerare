@@ -62,7 +62,7 @@ export class ApplicationTable extends Component {
           )}
           renderTopToolbarCustomActions={() => (
             <Button
-              color="secondary"
+              color="primary"
               onClick={this.props.openModal}
               variant="contained"
             >

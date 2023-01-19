@@ -30,10 +30,23 @@ export class SaleRemuneration extends Component {
     this.createNewSaleRemuneration = this.createNewSaleRemuneration.bind(this);
     this.populateSaleRemunerationData =
       this.populateSaleRemunerationData.bind(this);
+    this.deleteSaleRemunerationById =
+      this.deleteSaleRemunerationById.bind(this);
+  }
+
+  componentDidMount() {
+    this.populateSaleRemunerationData();
   }
 
   renderSaleRemunerationsTable(salesRemunerations) {
-    const handleDeleteRow = (row) => {};
+    const handleDeleteRow = (row) => {
+      var result = window.confirm(
+        `Esti sigur ca vrei sa stergi remunerarea produsului ${row.original.salesRemunerationProduct.productName}?`
+      );
+      if (result === true) {
+        this.deleteSaleRemunerationById(row.original.remunerationId);
+      }
+    };
 
     const columns = [
       {
@@ -112,7 +125,6 @@ export class SaleRemuneration extends Component {
   }
 
   render() {
-    this.populateSaleRemunerationData();
     let contents = this.state.loading ? (
       <p>
         <em>Loading...</em>
@@ -161,5 +173,16 @@ export class SaleRemuneration extends Component {
         remuneration: this.state.remuneration,
       }
     );
+    this.setState({ loading: true });
+    this.populateSaleRemunerationData();
+  }
+
+  async deleteSaleRemunerationById(remunerationId) {
+    const response = await httpClient.delete(
+      "/salesRemunerations/DeleteSalesRemuneration",
+      remunerationId
+    );
+    this.setState({ loading: true });
+    this.populateSaleRemunerationData();
   }
 }

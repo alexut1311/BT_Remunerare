@@ -30,10 +30,21 @@ export class Sale extends Component {
     this.renderSalesTable = this.renderSalesTable.bind(this);
     this.createNewSale = this.createNewSale.bind(this);
     this.populateSaleData = this.populateSaleData.bind(this);
+    this.deleteSaleById = this.deleteSaleById.bind(this);
+  }
+  componentDidMount() {
+    this.populateSaleData();
   }
 
   renderSalesTable(sales) {
-    const handleDeleteRow = (row) => {};
+    const handleDeleteRow = (row) => {
+      var result = window.confirm(
+        `Esti sigur ca vrei sa stergi vanzarea produsului ${row.original.saleProduct.productName}?`
+      );
+      if (result === true) {
+        this.deleteSaleById(row.original.saleId);
+      }
+    };
 
     const columns = [
       {
@@ -123,7 +134,6 @@ export class Sale extends Component {
   }
 
   render() {
-    this.populateSaleData();
     let contents = this.state.loading ? (
       <p>
         <em>Loading...</em>
@@ -173,5 +183,13 @@ export class Sale extends Component {
       vendorId: sale.productId,
       numberOfProducts: this.state.numberOfProducts,
     });
+    this.setState({ loading: true });
+    this.populateSaleData();
+  }
+
+  async deleteSaleById(saleId) {
+    const response = await httpClient.delete("/sale/DeleteSale", saleId);
+    this.setState({ loading: true });
+    this.populateSaleData();
   }
 }

@@ -46,7 +46,7 @@ export class CreateNewSaleRemunerationModal extends Component {
               }}
             >
               <Box sx={{ minWidth: 120 }}>
-                <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+                <FormControl variant="standard" sx={{ m: 1, minWidth: 400 }}>
                   <InputLabel id="period-dropdown-select-label">
                     Perioada
                   </InputLabel>
@@ -68,7 +68,7 @@ export class CreateNewSaleRemunerationModal extends Component {
                 </FormControl>
               </Box>
               <Box sx={{ minWidth: 120 }}>
-                <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+                <FormControl variant="standard" sx={{ m: 1, minWidth: 400 }}>
                   <InputLabel id="product-dropdown-select-label">
                     Produsul
                   </InputLabel>
@@ -106,7 +106,7 @@ export class CreateNewSaleRemunerationModal extends Component {
           <Button onClick={this.props.onClose}>
             {this.props.modalCancelText}
           </Button>
-          <Button color="secondary" onClick={handleSubmit} variant="contained">
+          <Button color="primary" onClick={handleSubmit} variant="contained">
             {this.props.modalText}
           </Button>
         </DialogActions>

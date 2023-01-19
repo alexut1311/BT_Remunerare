@@ -22,10 +22,22 @@ export class Period extends Component {
     this.renderPeriodsTable = this.renderPeriodsTable.bind(this);
     this.createNewPeriod = this.createNewPeriod.bind(this);
     this.populatePeriodData = this.populatePeriodData.bind(this);
+    this.deletePeriodById = this.deletePeriodById.bind(this);
+  }
+
+  componentDidMount() {
+    this.populatePeriodData();
   }
 
   renderPeriodsTable(periods) {
-    const handleDeleteRow = (row) => {};
+    const handleDeleteRow = (row) => {
+      var result = window.confirm(
+        `Esti sigur ca vrei sa stergi anul ${row.original.year} si luna ${row.original.month}?`
+      );
+      if (result === true) {
+        this.deletePeriodById(row.original.periodId);
+      }
+    };
 
     const columns = [
       {
@@ -92,7 +104,6 @@ export class Period extends Component {
   }
 
   render() {
-    this.populatePeriodData();
     let contents = this.state.loading ? (
       <p>
         <em>Loading...</em>
@@ -120,5 +131,13 @@ export class Period extends Component {
       year: this.state.year,
       month: this.state.month,
     });
+    this.setState({ loading: true });
+    this.populatePeriodData();
+  }
+
+  async deletePeriodById(periodId) {
+    const response = await httpClient.delete("/period/DeletePeriod", periodId);
+    this.setState({ loading: true });
+    this.populatePeriodData();
   }
 }

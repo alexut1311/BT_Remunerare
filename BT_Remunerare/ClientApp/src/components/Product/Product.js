@@ -23,10 +23,22 @@ export class Product extends Component {
     this.renderProductsTable = this.renderProductsTable.bind(this);
     this.createNewProduct = this.createNewProduct.bind(this);
     this.populateProductData = this.populateProductData.bind(this);
+    this.deleteProductById = this.deleteProductById.bind(this);
+  }
+
+  componentDidMount() {
+    this.populateProductData();
   }
 
   renderProductsTable(products) {
-    const handleDeleteRow = (row) => {};
+    const handleDeleteRow = (row) => {
+      var result = window.confirm(
+        `Esti sigur ca vrei sa stergi produsul ${row.original.productName}?`
+      );
+      if (result == true) {
+        this.deleteProductById(row.original.productId);
+      }
+    };
 
     const columns = [
       {
@@ -88,7 +100,6 @@ export class Product extends Component {
   }
 
   render() {
-    this.populateProductData();
     let contents = this.state.loading ? (
       <p>
         <em>Loading...</em>
@@ -115,5 +126,16 @@ export class Product extends Component {
     const response = await httpClient.post("/product/AddProduct", {
       productName: this.state.productName,
     });
+    this.setState({ loading: true });
+    this.populateProductData();
+  }
+
+  async deleteProductById(productId) {
+    const response = await httpClient.delete(
+      "/product/DeleteProduct",
+      productId
+    );
+    this.setState({ loading: true });
+    this.populateProductData();
   }
 }

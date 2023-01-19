@@ -23,10 +23,22 @@ export class Vendor extends Component {
     this.renderVendorsTable = this.renderVendorsTable.bind(this);
     this.createNewVendor = this.createNewVendor.bind(this);
     this.populateVendorData = this.populateVendorData.bind(this);
+    this.deleteVendorById = this.deleteVendorById.bind(this);
+  }
+
+  componentDidMount() {
+    this.populateVendorData();
   }
 
   renderVendorsTable(vendors) {
-    const handleDeleteRow = (row) => {};
+    const handleDeleteRow = (row) => {
+      var result = window.confirm(
+        `Esti sigur ca vrei sa stergi vanzatorul ${row.original.vendorName}?`
+      );
+      if (result === true) {
+        this.deleteVendorById(row.original.vendorId);
+      }
+    };
 
     const columns = [
       {
@@ -88,7 +100,6 @@ export class Vendor extends Component {
   }
 
   render() {
-    this.populateVendorData();
     let contents = this.state.loading ? (
       <p>
         <em>Loading...</em>
@@ -115,5 +126,13 @@ export class Vendor extends Component {
     const response = await httpClient.post("/vendor/AddVendor", {
       vendorName: this.state.vendorName,
     });
+    this.setState({ loading: true });
+    this.populateVendorData();
+  }
+
+  async deleteVendorById(vendorId) {
+    const response = await httpClient.delete("/vendor/DeleteVendor", vendorId);
+    this.setState({ loading: true });
+    this.populateVendorData();
   }
 }
