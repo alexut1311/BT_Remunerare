@@ -115,8 +115,5 @@ export class Product extends Component {
     const response = await httpClient.post("/product/AddProduct", {
       productName: this.state.productName,
     });
-    if (response.status === 200) {
-      this.setState({ periods: [], loading: true });
-    }
   }
 }
