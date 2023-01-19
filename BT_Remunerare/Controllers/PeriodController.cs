@@ -36,7 +36,7 @@ namespace BT_Remunerare.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpDelete]
         [Route("DeletePeriod/{periodId}")]
         public IActionResult DeletePeriod(int periodId)
         {

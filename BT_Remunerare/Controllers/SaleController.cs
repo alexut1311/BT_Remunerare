@@ -36,7 +36,7 @@ namespace BT_Remunerare.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpDelete]
         [Route("DeleteSale/{saleId}")]
         public IActionResult DeleteSale(int saleId)
         {

@@ -20,8 +20,6 @@ export function Home() {
   const [totalSales, setTotalSales] = useState([]);
   const [loading, setLoading] = useState(true);
   const [periodId, setPeriodId] = useState(0);
-  const [createModalOpen, setCreateModalOpen] = useState(false);
-  const [uniqueVendors, setUniqueVendors] = useState([]);
 
   useEffect(() => {
     populatePeriodData(
@@ -33,11 +31,19 @@ export function Home() {
   }, []);
 
   useEffect(() => {
-    pop(periodId, setTotalSales);
+    populateTotalSales(periodId, setTotalSales);
+    setPeriod(allSelectablePeriods.find((x) => x.periodId === periodId));
   }, [periodId]);
 
   const renderTotalSalesTable = (totalSales) => {
     const createTableBody = (totalSales) => {
+      if (totalSales.length === 0) {
+        return createElement(
+          "h3",
+          { className: "centered-text" },
+          "Nu s-au gasit inregistrari pentru aceasta perioada."
+        );
+      }
       let vendorHeadings = [createElement(TableCell, null, "")];
       let productRows = [];
       let uniqueVendors = new Set();
@@ -171,7 +177,7 @@ async function populatePeriodData(
   setAllSelectablePeriods(allPeriodsResponse);
 }
 
-async function pop(periodId, setTotalSales) {
+async function populateTotalSales(periodId, setTotalSales) {
   if (periodId === 0) {
     return;
   }

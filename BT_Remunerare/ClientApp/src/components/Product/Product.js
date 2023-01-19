@@ -20,14 +20,12 @@ export class Product extends Component {
       productName: "",
       createModalOpen: false,
     };
-    this.renderPeriodsTable = this.renderPeriodsTable.bind(this);
+    this.renderProductsTable = this.renderProductsTable.bind(this);
+    this.createNewProduct = this.createNewProduct.bind(this);
+    this.populateProductData = this.populateProductData.bind(this);
   }
 
-  componentDidMount() {
-    this.populatePeriodData();
-  }
-
-  renderPeriodsTable(products) {
+  renderProductsTable(products) {
     const handleDeleteRow = (row) => {};
 
     const columns = [
@@ -66,7 +64,7 @@ export class Product extends Component {
         modalText={PRODUCT_MODAL_TEXT}
         modalCancelText={MODAL_CANCEL_TEXT}
         setComponentState={setComponentState}
-        //onSubmit={handleCreateNewRow}
+        onSubmit={this.createNewProduct}
       />
     );
 
@@ -90,12 +88,13 @@ export class Product extends Component {
   }
 
   render() {
+    this.populateProductData();
     let contents = this.state.loading ? (
       <p>
         <em>Loading...</em>
       </p>
     ) : (
-      this.renderPeriodsTable(this.state.products)
+      this.renderProductsTable(this.state.products)
     );
 
     return (
@@ -106,9 +105,18 @@ export class Product extends Component {
     );
   }
 
-  async populatePeriodData() {
+  async populateProductData() {
     const response = await httpClient.get("/product/GetAllProducts");
     const data = await response.json();
     this.setState({ products: data, loading: false });
+  }
+
+  async createNewProduct() {
+    const response = await httpClient.post("/product/AddProduct", {
+      productName: this.state.productName,
+    });
+    if (response.status === 200) {
+      this.setState({ periods: [], loading: true });
+    }
   }
 }

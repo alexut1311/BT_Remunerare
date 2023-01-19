@@ -7,6 +7,7 @@ import {
   SALE_HEADER_TEXT,
   SALE_MODAL_TEXT,
 } from "../../utils/constValues";
+import { CreateNewSaleModal } from "./CreateNewSaleModal";
 
 export class Sale extends Component {
   static displayName = Sale.name;
@@ -16,6 +17,9 @@ export class Sale extends Component {
     this.state = {
       sales: [],
       loading: true,
+      periods: [],
+      products: [],
+      vendors: [],
       saleId: 0,
       periodId: 0,
       vendorId: 0,
@@ -23,14 +27,12 @@ export class Sale extends Component {
       numberOfProducts: 0,
       createModalOpen: false,
     };
-    this.renderPeriodsTable = this.renderPeriodsTable.bind(this);
+    this.renderSalesTable = this.renderSalesTable.bind(this);
+    this.createNewSale = this.createNewSale.bind(this);
+    this.populateSaleData = this.populateSaleData.bind(this);
   }
 
-  componentDidMount() {
-    this.populatePeriodData();
-  }
-
-  renderPeriodsTable(sales) {
+  renderSalesTable(sales) {
     const handleDeleteRow = (row) => {};
 
     const columns = [
@@ -87,14 +89,17 @@ export class Sale extends Component {
     };
 
     const productModal = (
-      <CreateModal
+      <CreateNewSaleModal
         columns={columns}
+        periods={this.state.periods}
+        products={this.state.products}
+        vendors={this.state.vendors}
         open={this.state.createModalOpen}
         onClose={() => this.setState({ createModalOpen: false })}
         modalText={SALE_MODAL_TEXT}
         modalCancelText={MODAL_CANCEL_TEXT}
         setComponentState={setComponentState}
-        //onSubmit={handleCreateNewRow}
+        onSubmit={this.createNewSale}
       />
     );
 
@@ -118,12 +123,13 @@ export class Sale extends Component {
   }
 
   render() {
+    this.populateSaleData();
     let contents = this.state.loading ? (
       <p>
         <em>Loading...</em>
       </p>
     ) : (
-      this.renderPeriodsTable(this.state.sales)
+      this.renderSalesTable(this.state.sales)
     );
 
     return (
@@ -134,11 +140,38 @@ export class Sale extends Component {
     );
   }
 
-  async populatePeriodData() {
-    const response = await httpClient.get(
-      "/sale/GetAllSalesWithVendorAndProductAndPeriod"
-    );
-    const data = await response.json();
-    this.setState({ sales: data, loading: false });
+  async populateSaleData() {
+    const allSalesResponse = await httpClient
+      .get("/sale/GetAllSalesWithVendorAndProductAndPeriod")
+      .then((res) => res.json());
+
+    const allPeriodsResponse = await httpClient
+      .get("/period/GetAllPeriods")
+      .then((res) => res.json());
+
+    const allVendorsResponse = await httpClient
+      .get("/vendor/GetAllVendors")
+      .then((res) => res.json());
+
+    const allProductsResponse = await httpClient
+      .get("/product/GetAllProducts")
+      .then((res) => res.json());
+
+    this.setState({
+      sales: allSalesResponse,
+      periods: allPeriodsResponse,
+      vendors: allVendorsResponse,
+      products: allProductsResponse,
+      loading: false,
+    });
+  }
+
+  async createNewSale(sale) {
+    const response = await httpClient.post("/sale/AddSale", {
+      periodId: sale.periodId,
+      productId: sale.productId,
+      vendorId: sale.productId,
+      numberOfProducts: this.state.numberOfProducts,
+    });
   }
 }

@@ -69,6 +69,7 @@ export class ApplicationTable extends Component {
               {this.props.modalText}
             </Button>
           )}
+          options={{ rowsPerPage: 50 }}
           initialState={this.props.initialState}
         />
       </>
