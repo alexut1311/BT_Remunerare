@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import httpClient from "../../utils/httpClient";
 import { ApplicationTable } from "../Table/ApplicationTable";
-import { CreateModal } from "../Modal/CreateModal";
 import {
   MODAL_CANCEL_TEXT,
   SALE_EDIT_MODAL_TEXT,
