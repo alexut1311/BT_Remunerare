@@ -24,6 +24,7 @@ export class Vendor extends Component {
     this.createNewVendor = this.createNewVendor.bind(this);
     this.populateVendorData = this.populateVendorData.bind(this);
     this.deleteVendorById = this.deleteVendorById.bind(this);
+    this.editVendorById = this.editVendorById.bind(this);
   }
 
   componentDidMount() {
@@ -38,6 +39,10 @@ export class Vendor extends Component {
       if (result === true) {
         this.deleteVendorById(row.original.vendorId);
       }
+    };
+
+    const handleSaveRowEdits = (row) => {
+      this.editVendorById(row.values);
     };
 
     const columns = [
@@ -87,6 +92,7 @@ export class Vendor extends Component {
         handleDeleteRow={handleDeleteRow}
         modalText={VENDOR_MODAL_TEXT}
         openModal={openModal}
+        handleSaveRowEdits={handleSaveRowEdits}
         initialState={{ columnVisibility: { vendorId: false } }}
       />
     );
@@ -132,6 +138,15 @@ export class Vendor extends Component {
 
   async deleteVendorById(vendorId) {
     const response = await httpClient.delete("/vendor/DeleteVendor", vendorId);
+    this.setState({ loading: true });
+    this.populateVendorData();
+  }
+
+  async editVendorById(updatedVendor) {
+    const response = await httpClient.post(
+      "/vendor/UpdateVendor",
+      updatedVendor
+    );
     this.setState({ loading: true });
     this.populateVendorData();
   }

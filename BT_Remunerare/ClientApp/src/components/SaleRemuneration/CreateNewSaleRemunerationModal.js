@@ -53,7 +53,7 @@ export class CreateNewSaleRemunerationModal extends Component {
                   <Select
                     labelId="period-dropdown-select-label"
                     id="period-dropdown-select"
-                    value={this.state.periodId}
+                    value={this.props.periodId || this.state.periodId}
                     label="Perioada"
                     onChange={(e) =>
                       this.setState({ periodId: e.target.value })
@@ -75,7 +75,7 @@ export class CreateNewSaleRemunerationModal extends Component {
                   <Select
                     labelId="product-dropdown-select-label"
                     id="product-dropdown-select"
-                    value={this.state.productId}
+                    value={this.props.productId || this.state.productId}
                     label="Produsul"
                     onChange={(e) =>
                       this.setState({ productId: e.target.value })
