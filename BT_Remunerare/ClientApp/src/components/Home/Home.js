@@ -93,7 +93,7 @@ export function Home() {
             {
               key: sale.productName,
             },
-            [productNameCell, vendorSaleCells]
+            [productNameCell, ...vendorSaleCells]
           )
         );
       });
@@ -131,11 +131,15 @@ export function Home() {
             label="Perioada"
             onChange={handleChange}
           >
-            {periods.map((period) => (
-              <MenuItem value={period.periodId}>
-                Anul {period.year} si luna {period.month}
-              </MenuItem>
-            ))}
+            {periods.length != 0 ? (
+              periods.map((period) => (
+                <MenuItem value={period.periodId}>
+                  Anul {period.year} si luna {period.month}
+                </MenuItem>
+              ))
+            ) : (
+              <></>
+            )}
           </Select>
         </FormControl>
       </Box>

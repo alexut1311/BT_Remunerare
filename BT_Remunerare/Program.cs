@@ -1,4 +1,5 @@
 using BT_Remunerare;
+using BT_Remunerare.Helpers;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -28,7 +29,8 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller}/{action=Index}/{id?}");
 
-app.MapFallbackToFile("index.html"); ;
+app.MapFallbackToFile("index.html");
+app.SeedData();
 app.Run();
 
 public partial class Program { }
