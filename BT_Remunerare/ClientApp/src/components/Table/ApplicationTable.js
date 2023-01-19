@@ -41,14 +41,16 @@ export class ApplicationTable extends Component {
           editingMode="modal" //default
           enableColumnOrdering
           enableEditing
-          //onEditingRowSave={handleSaveRowEdits}
+          onEditingRowSave={this.props.handleSaveRowEdits}
           //onEditingRowCancel={handleCancelRowEdits}
           renderRowActions={({ row, table }) => (
             <Box sx={{ display: "flex", gap: "1rem" }}>
               <Tooltip arrow placement="left" title="Edit">
-                <IconButton onClick={() => table.setEditingRow(row)}>
-                  <Edit />
-                </IconButton>
+                {this.props.editButton(row) || (
+                  <IconButton onClick={() => table.setEditingRow(row)}>
+                    <Edit />
+                  </IconButton>
+                )}
               </Tooltip>
               <Tooltip arrow placement="right" title="Delete">
                 <IconButton
