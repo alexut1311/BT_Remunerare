@@ -1,4 +1,4 @@
-import React, { Component, createElement } from "react";
+import React, { useState, useEffect, createElement } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -14,28 +14,29 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import "./Home.css";
 
-export class Home extends Component {
-  static displayName = Home.name;
-  constructor(props) {
-    super(props);
-    this.state = {
-      period: [],
-      allSelectablePeriods: [],
-      totalSales: [],
-      loading: true,
-      periodId: 0,
-      createModalOpen: false,
-      uniqueVendors: [],
-    };
-    this.renderTotalSalesTable = this.renderTotalSalesTable.bind(this);
-  }
+export function Home() {
+  const [period, setPeriod] = useState([]);
+  const [allSelectablePeriods, setAllSelectablePeriods] = useState([]);
+  const [totalSales, setTotalSales] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [periodId, setPeriodId] = useState(0);
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [uniqueVendors, setUniqueVendors] = useState([]);
 
-  componentDidMount() {
-    this.populatePeriodData();
-    this.pop();
-  }
+  useEffect(() => {
+    populatePeriodData(
+      setPeriod,
+      setLoading,
+      setPeriodId,
+      setAllSelectablePeriods
+    );
+  }, []);
 
-  renderTotalSalesTable(totalSales) {
+  useEffect(() => {
+    pop(periodId, setTotalSales);
+  }, [periodId]);
+
+  const renderTotalSalesTable = (totalSales) => {
     const createTableBody = (totalSales) => {
       let vendorHeadings = [createElement(TableCell, null, "")];
       let productRows = [];
@@ -106,11 +107,11 @@ export class Home extends Component {
         </TableContainer>
       </>
     );
-  }
+  };
 
-  createSelectMenu(periods) {
+  const createSelectMenu = (periods) => {
     const handleChange = (event) => {
-      this.setState({ periodId: event.target.value });
+      setPeriodId(event.target.value);
     };
 
     return (
@@ -120,7 +121,7 @@ export class Home extends Component {
           <Select
             labelId="period-dropdown-select-label"
             id="period-dropdown-select"
-            value={this.state.periodId}
+            value={periodId}
             label="Perioada"
             onChange={handleChange}
           >
@@ -133,72 +134,70 @@ export class Home extends Component {
         </FormControl>
       </Box>
     );
+  };
+
+  let contents = loading ? (
+    <p>
+      <em>Loading...</em>
+    </p>
+  ) : (
+    renderTotalSalesTable(totalSales)
+  );
+
+  return (
+    <div>
+      <h1>BT Remunerare Challenge</h1>
+      <h2>
+        Tabel vanzari totale in anul {period?.year} si luna {period?.month}
+      </h2>
+      {createSelectMenu(allSelectablePeriods)}
+      {contents}
+    </div>
+  );
+}
+
+async function populatePeriodData(
+  setPeriod,
+  setLoading,
+  setPeriodId,
+  setAllSelectablePeriods
+) {
+  const allPeriodsResponse = await httpClient
+    .get("/period/GetAllPeriods")
+    .then((res) => res.json());
+  setPeriod(allPeriodsResponse[0]);
+  setLoading(false);
+  setPeriodId(allPeriodsResponse[0]?.periodId);
+  setAllSelectablePeriods(allPeriodsResponse);
+}
+
+async function pop(periodId, setTotalSales) {
+  if (periodId === 0) {
+    return;
   }
 
-  render() {
-    let contents = this.state.loading ? (
-      <p>
-        <em>Loading...</em>
-      </p>
-    ) : (
-      this.renderTotalSalesTable(this.state.totalSales)
-    );
+  const saleResponse = await httpClient
+    .get(`/sale/GetTotalSalesValueByPeriodId/${periodId}`)
+    .then((res) => res.json());
 
-    return (
-      <div>
-        <h1>BT Remunerare Challenge</h1>
-        <h2>
-          Tabel vanzari totale in anul {this.state.period?.year} si luna{" "}
-          {this.state.period?.month}
-        </h2>
-        {this.createSelectMenu(this.state.allSelectablePeriods)}
-        {contents}
-      </div>
-    );
+  let allSales = [];
+  for (const [key, value] of Object.entries(saleResponse.totalSales)) {
+    const uniqueProduct = [
+      ...new Set(value.map((item) => item.product.productName)),
+    ];
+    const productName = uniqueProduct[0];
+    const saleAgregation = {
+      productName: productName,
+      vendorSales: value
+        .filter((x) => x.product.productName === productName)
+        .map(function (item) {
+          return {
+            vendorName: item.vendor.vendorName,
+            totalSale: item.totalSalesValue,
+          };
+        }),
+    };
+    allSales.push(saleAgregation);
   }
-
-  async populatePeriodData() {
-    const allPeriodsResponse = await httpClient
-      .get("/period/GetAllPeriods")
-      .then((res) => res.json());
-
-    this.setState({
-      period: allPeriodsResponse[0],
-      loading: false,
-      periodId: allPeriodsResponse[0]?.periodId,
-      allSelectablePeriods: allPeriodsResponse,
-    });
-  }
-  async pop() {
-    if (this.state.periodId === 0) {
-      return;
-    }
-
-    const saleResponse = await httpClient
-      .get(`/sale/GetTotalSalesValueByPeriodId/${this.state.periodId}`)
-      .then((res) => res.json());
-
-    let allSales = [];
-    for (const [key, value] of Object.entries(saleResponse.totalSales)) {
-      const uniqueProduct = [
-        ...new Set(value.map((item) => item.product.productName)),
-      ];
-      const productName = uniqueProduct[0];
-      const saleAgregation = {
-        productName: productName,
-        vendorSales: value
-          .filter((x) => x.product.productName === productName)
-          .map(function (item) {
-            return {
-              vendorName: item.vendor.vendorName,
-              totalSale: item.totalSalesValue,
-            };
-          }),
-      };
-      allSales.push(saleAgregation);
-    }
-    this.setState({
-      totalSales: allSales,
-    });
-  }
+  setTotalSales(allSales);
 }
