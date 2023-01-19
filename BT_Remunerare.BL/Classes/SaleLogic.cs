@@ -44,14 +44,14 @@ namespace BT_Remunerare.BL.Classes
         public TotalSalesDTO GetTotalSalesValueByPeriodId(int periodId)
         {
             IList<SaleDTO> totalSalesDTO = _saleRepository.GetSalesByPeriodId(periodId);
-            TotalSalesDTO totalSalesValueDTO = new TotalSalesDTO();
+            TotalSalesDTO totalSalesValueDTO = new();
             foreach (SaleDTO saleDTO in totalSalesDTO)
             {
                 SalesRemunerationRuleDTO salesRemunerationRuleDTO = _salesRemunerationRepository.GetSalesRemunerationByPeriodAndProductId(saleDTO.PeriodId, saleDTO.ProductId);
                 if (salesRemunerationRuleDTO != null)
                 {
                     VendorTotalSalesDTO vendorTotalSales = new()
-                    { Vendor = saleDTO.SaleVendor,Product=saleDTO.SaleProduct, TotalSalesValue = saleDTO.NumberOfProducts * salesRemunerationRuleDTO.Remuneration };
+                    { Vendor = saleDTO.SaleVendor, Product = saleDTO.SaleProduct, TotalSalesValue = saleDTO.NumberOfProducts * salesRemunerationRuleDTO.Remuneration };
                     if (totalSalesValueDTO.TotalSales.ContainsKey(saleDTO.ProductId))
                     {
                         totalSalesValueDTO.TotalSales[saleDTO.ProductId].Add(vendorTotalSales);

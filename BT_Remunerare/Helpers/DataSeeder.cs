@@ -36,8 +36,9 @@ namespace BT_Remunerare.Helpers
                     ProductName = "Produsul 4",
                 }
                 };
-                foreach(Product product in _products) {
-                    _context.Products.Add(product);
+                foreach (Product product in _products)
+                {
+                    _ = _context.Products.Add(product);
                 }
             }
             else
@@ -67,7 +68,7 @@ namespace BT_Remunerare.Helpers
                 };
                 foreach (Vendor vendor in _vendors)
                 {
-                    _context.Vendors.Add(vendor);
+                    _ = _context.Vendors.Add(vendor);
                 }
             }
             else
@@ -91,7 +92,7 @@ namespace BT_Remunerare.Helpers
                 };
                 foreach (Period period in _periods)
                 {
-                    _context.Periods.Add(period);
+                    _ = _context.Periods.Add(period);
                 }
             }
             else
@@ -99,7 +100,7 @@ namespace BT_Remunerare.Helpers
                 _periods = _context.Periods.ToList();
             }
 
-            _context.SaveChanges();
+            _ = _context.SaveChanges();
 
             if (!_context.Sales.Any())
             {
@@ -215,7 +216,7 @@ namespace BT_Remunerare.Helpers
                     Remuneration=10
                 },});
             }
-            _context.SaveChanges();
+            _ = _context.SaveChanges();
 
         }
     }

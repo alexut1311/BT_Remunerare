@@ -34,7 +34,7 @@ namespace BT_Remunerare.DAL.Repository.Classes
                     return new Response { IsSuccesful = false, ErrorMessage = $"No product with product id {saleDTO.ProductId} was found" };
                 }
 
-                Sale? saleByProductAndPeriodAndVendorId = _applicationDBContext.Sales.FirstOrDefault(x => x.ProductId == saleDTO.ProductId && x.PeriodId == saleDTO.PeriodId && x.VendorId== saleDTO.VendorId);
+                Sale? saleByProductAndPeriodAndVendorId = _applicationDBContext.Sales.FirstOrDefault(x => x.ProductId == saleDTO.ProductId && x.PeriodId == saleDTO.PeriodId && x.VendorId == saleDTO.VendorId);
                 if (saleByProductAndPeriodAndVendorId != null)
                 {
                     saleByProductAndPeriodAndVendorId.NumberOfProducts = saleDTO.NumberOfProducts;
@@ -51,7 +51,7 @@ namespace BT_Remunerare.DAL.Repository.Classes
                     _ = _applicationDBContext.Sales.Add(newSale);
                 }
 
-                    
+
                 _ = _applicationDBContext.SaveChanges();
                 return new Response { IsSuccesful = true };
             }
