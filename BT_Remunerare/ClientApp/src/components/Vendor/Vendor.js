@@ -20,15 +20,25 @@ export class Vendor extends Component {
       vendorName: "",
       createModalOpen: false,
     };
-    this.renderPeriodsTable = this.renderPeriodsTable.bind(this);
+    this.renderVendorsTable = this.renderVendorsTable.bind(this);
+    this.createNewVendor = this.createNewVendor.bind(this);
+    this.populateVendorData = this.populateVendorData.bind(this);
+    this.deleteVendorById = this.deleteVendorById.bind(this);
   }
 
   componentDidMount() {
-    this.populatePeriodData();
+    this.populateVendorData();
   }
 
-  renderPeriodsTable(vendors) {
-    const handleDeleteRow = (row) => {};
+  renderVendorsTable(vendors) {
+    const handleDeleteRow = (row) => {
+      var result = window.confirm(
+        `Esti sigur ca vrei sa stergi vanzatorul ${row.original.vendorName}?`
+      );
+      if (result === true) {
+        this.deleteVendorById(row.original.vendorId);
+      }
+    };
 
     const columns = [
       {
@@ -66,7 +76,7 @@ export class Vendor extends Component {
         modalText={VENDOR_MODAL_TEXT}
         modalCancelText={MODAL_CANCEL_TEXT}
         setComponentState={setComponentState}
-        //onSubmit={handleCreateNewRow}
+        onSubmit={this.createNewVendor}
       />
     );
 
@@ -95,7 +105,7 @@ export class Vendor extends Component {
         <em>Loading...</em>
       </p>
     ) : (
-      this.renderPeriodsTable(this.state.vendors)
+      this.renderVendorsTable(this.state.vendors)
     );
 
     return (
@@ -106,9 +116,23 @@ export class Vendor extends Component {
     );
   }
 
-  async populatePeriodData() {
+  async populateVendorData() {
     const response = await httpClient.get("/vendor/GetAllVendors");
     const data = await response.json();
     this.setState({ vendors: data, loading: false });
+  }
+
+  async createNewVendor() {
+    const response = await httpClient.post("/vendor/AddVendor", {
+      vendorName: this.state.vendorName,
+    });
+    this.setState({ loading: true });
+    this.populateVendorData();
+  }
+
+  async deleteVendorById(vendorId) {
+    const response = await httpClient.delete("/vendor/DeleteVendor", vendorId);
+    this.setState({ loading: true });
+    this.populateVendorData();
   }
 }

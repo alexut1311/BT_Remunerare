@@ -14,13 +14,13 @@ const httpGet = (url) => {
  * @param {object} content the data to send
  */
 const httpPost = (url, content = {}) => {
-  return fetch(`${backEndURL}${url}`, {
-    method: "POST", // GET, *POST, PUT, DELETE, etc.
-    headers: {
-      "Content-Type": "application/json", // *application/json, application/x-www-form-urlencoded
-    },
+  const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(content),
-  });
+  };
+
+  return fetch(`${backEndURL}${url}`, requestOptions);
 };
 
 /**

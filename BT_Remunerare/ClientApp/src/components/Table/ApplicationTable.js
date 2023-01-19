@@ -62,13 +62,14 @@ export class ApplicationTable extends Component {
           )}
           renderTopToolbarCustomActions={() => (
             <Button
-              color="secondary"
+              color="primary"
               onClick={this.props.openModal}
               variant="contained"
             >
               {this.props.modalText}
             </Button>
           )}
+          options={{ rowsPerPage: 50 }}
           initialState={this.props.initialState}
         />
       </>

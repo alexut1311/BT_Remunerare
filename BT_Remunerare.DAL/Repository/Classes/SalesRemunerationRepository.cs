@@ -29,13 +29,22 @@ namespace BT_Remunerare.DAL.Repository.Classes
                     return new Response { IsSuccesful = false, ErrorMessage = $"No product with product id {salesRemunerationRuleDTO.ProductId} was found" };
                 }
 
-                SalesRemunerationRule newSalesRemunerationRule = new()
+                SalesRemunerationRule? saleRemunerationByProductAndPeriodId = _applicationDBContext.SalesRemunerationRules.FirstOrDefault(x => x.ProductId == salesRemunerationRuleDTO.ProductId && x.PeriodId == salesRemunerationRuleDTO.PeriodId);
+                if (saleRemunerationByProductAndPeriodId != null)
                 {
-                    PeriodId = salesRemunerationRuleDTO.PeriodId,
-                    ProductId = salesRemunerationRuleDTO.ProductId,
-                    Remuneration = salesRemunerationRuleDTO.Remuneration,
-                };
-                _ = _applicationDBContext.SalesRemunerationRules.Add(newSalesRemunerationRule);
+                    saleRemunerationByProductAndPeriodId.Remuneration = salesRemunerationRuleDTO.Remuneration;
+                }
+                else
+                {
+
+                    SalesRemunerationRule newSalesRemunerationRule = new()
+                    {
+                        PeriodId = salesRemunerationRuleDTO.PeriodId,
+                        ProductId = salesRemunerationRuleDTO.ProductId,
+                        Remuneration = salesRemunerationRuleDTO.Remuneration,
+                    };
+                    _ = _applicationDBContext.SalesRemunerationRules.Add(newSalesRemunerationRule);
+                }
                 _ = _applicationDBContext.SaveChanges();
                 return new Response { IsSuccesful = true };
             }

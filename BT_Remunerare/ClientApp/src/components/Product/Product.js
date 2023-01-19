@@ -20,15 +20,25 @@ export class Product extends Component {
       productName: "",
       createModalOpen: false,
     };
-    this.renderPeriodsTable = this.renderPeriodsTable.bind(this);
+    this.renderProductsTable = this.renderProductsTable.bind(this);
+    this.createNewProduct = this.createNewProduct.bind(this);
+    this.populateProductData = this.populateProductData.bind(this);
+    this.deleteProductById = this.deleteProductById.bind(this);
   }
 
   componentDidMount() {
-    this.populatePeriodData();
+    this.populateProductData();
   }
 
-  renderPeriodsTable(products) {
-    const handleDeleteRow = (row) => {};
+  renderProductsTable(products) {
+    const handleDeleteRow = (row) => {
+      var result = window.confirm(
+        `Esti sigur ca vrei sa stergi produsul ${row.original.productName}?`
+      );
+      if (result == true) {
+        this.deleteProductById(row.original.productId);
+      }
+    };
 
     const columns = [
       {
@@ -66,7 +76,7 @@ export class Product extends Component {
         modalText={PRODUCT_MODAL_TEXT}
         modalCancelText={MODAL_CANCEL_TEXT}
         setComponentState={setComponentState}
-        //onSubmit={handleCreateNewRow}
+        onSubmit={this.createNewProduct}
       />
     );
 
@@ -95,7 +105,7 @@ export class Product extends Component {
         <em>Loading...</em>
       </p>
     ) : (
-      this.renderPeriodsTable(this.state.products)
+      this.renderProductsTable(this.state.products)
     );
 
     return (
@@ -106,9 +116,26 @@ export class Product extends Component {
     );
   }
 
-  async populatePeriodData() {
+  async populateProductData() {
     const response = await httpClient.get("/product/GetAllProducts");
     const data = await response.json();
     this.setState({ products: data, loading: false });
+  }
+
+  async createNewProduct() {
+    const response = await httpClient.post("/product/AddProduct", {
+      productName: this.state.productName,
+    });
+    this.setState({ loading: true });
+    this.populateProductData();
+  }
+
+  async deleteProductById(productId) {
+    const response = await httpClient.delete(
+      "/product/DeleteProduct",
+      productId
+    );
+    this.setState({ loading: true });
+    this.populateProductData();
   }
 }

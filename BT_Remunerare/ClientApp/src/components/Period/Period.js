@@ -9,8 +9,6 @@ import {
 } from "../../utils/constValues";
 
 export class Period extends Component {
-  static displayName = Period.name;
-
   constructor(props) {
     super(props);
     this.state = {
@@ -22,6 +20,9 @@ export class Period extends Component {
       createModalOpen: false,
     };
     this.renderPeriodsTable = this.renderPeriodsTable.bind(this);
+    this.createNewPeriod = this.createNewPeriod.bind(this);
+    this.populatePeriodData = this.populatePeriodData.bind(this);
+    this.deletePeriodById = this.deletePeriodById.bind(this);
   }
 
   componentDidMount() {
@@ -29,7 +30,14 @@ export class Period extends Component {
   }
 
   renderPeriodsTable(periods) {
-    const handleDeleteRow = (row) => {};
+    const handleDeleteRow = (row) => {
+      var result = window.confirm(
+        `Esti sigur ca vrei sa stergi anul ${row.original.year} si luna ${row.original.month}?`
+      );
+      if (result === true) {
+        this.deletePeriodById(row.original.periodId);
+      }
+    };
 
     const columns = [
       {
@@ -72,7 +80,7 @@ export class Period extends Component {
         modalText={PERIOD_MODAL_TEXT}
         modalCancelText={MODAL_CANCEL_TEXT}
         setComponentState={setComponentState}
-        //onSubmit={handleCreateNewRow}
+        onSubmit={this.createNewPeriod}
       />
     );
 
@@ -116,5 +124,20 @@ export class Period extends Component {
     const response = await httpClient.get("/period/GetAllPeriods");
     const data = await response.json();
     this.setState({ periods: data, loading: false });
+  }
+
+  async createNewPeriod() {
+    const response = await httpClient.post("/period/AddPeriod", {
+      year: this.state.year,
+      month: this.state.month,
+    });
+    this.setState({ loading: true });
+    this.populatePeriodData();
+  }
+
+  async deletePeriodById(periodId) {
+    const response = await httpClient.delete("/period/DeletePeriod", periodId);
+    this.setState({ loading: true });
+    this.populatePeriodData();
   }
 }

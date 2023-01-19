@@ -1,5 +1,5 @@
 import { Period } from "./components/Period/Period";
-import { Home } from "./components/Home";
+import { Home } from "./components/Home/Home";
 import { Product } from "./components/Product/Product";
 import { Vendor } from "./components/Vendor/Vendor";
 import { Sale } from "./components/Sale/Sale";

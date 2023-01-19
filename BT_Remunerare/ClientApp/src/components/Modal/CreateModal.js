@@ -54,7 +54,7 @@ export class CreateModal extends Component {
           <Button onClick={this.props.onClose}>
             {this.props.modalCancelText}
           </Button>
-          <Button color="secondary" onClick={handleSubmit} variant="contained">
+          <Button color="primary" onClick={handleSubmit} variant="contained">
             {this.props.modalText}
           </Button>
         </DialogActions>

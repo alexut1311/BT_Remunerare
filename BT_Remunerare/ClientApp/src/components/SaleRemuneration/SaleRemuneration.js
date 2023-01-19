@@ -7,6 +7,8 @@ import {
   REMUNERATION_HEADER_TEXT,
   REMUNERATION_MODAL_TEXT,
 } from "../../utils/constValues";
+import { MenuItem } from "@mui/material";
+import { CreateNewSaleRemunerationModal } from "./CreateNewSaleRemunerationModal";
 
 export class SaleRemuneration extends Component {
   static displayName = SaleRemuneration.name;
@@ -17,20 +19,34 @@ export class SaleRemuneration extends Component {
       salesRemunerations: [],
       loading: true,
       remunerationId: 0,
-      periodId: 0,
-      productId: 0,
       remuneration: 0,
       createModalOpen: false,
+      allSelectablePeriods: [],
+      allProducts: [],
     };
-    this.renderPeriodsTable = this.renderPeriodsTable.bind(this);
+    this.renderSaleRemunerationsTable =
+      this.renderSaleRemunerationsTable.bind(this);
+
+    this.createNewSaleRemuneration = this.createNewSaleRemuneration.bind(this);
+    this.populateSaleRemunerationData =
+      this.populateSaleRemunerationData.bind(this);
+    this.deleteSaleRemunerationById =
+      this.deleteSaleRemunerationById.bind(this);
   }
 
   componentDidMount() {
-    this.populatePeriodData();
+    this.populateSaleRemunerationData();
   }
 
-  renderPeriodsTable(salesRemunerations) {
-    const handleDeleteRow = (row) => {};
+  renderSaleRemunerationsTable(salesRemunerations) {
+    const handleDeleteRow = (row) => {
+      var result = window.confirm(
+        `Esti sigur ca vrei sa stergi remunerarea produsului ${row.original.salesRemunerationProduct.productName}?`
+      );
+      if (result === true) {
+        this.deleteSaleRemunerationById(row.original.remunerationId);
+      }
+    };
 
     const columns = [
       {
@@ -77,14 +93,15 @@ export class SaleRemuneration extends Component {
     };
 
     const productModal = (
-      <CreateModal
-        columns={columns}
+      <CreateNewSaleRemunerationModal
+        periods={this.state.allSelectablePeriods}
+        products={this.state.allProducts}
         open={this.state.createModalOpen}
         onClose={() => this.setState({ createModalOpen: false })}
         modalText={REMUNERATION_MODAL_TEXT}
         modalCancelText={MODAL_CANCEL_TEXT}
+        onSubmit={this.createNewSaleRemuneration}
         setComponentState={setComponentState}
-        //onSubmit={handleCreateNewRow}
       />
     );
 
@@ -113,7 +130,7 @@ export class SaleRemuneration extends Component {
         <em>Loading...</em>
       </p>
     ) : (
-      this.renderPeriodsTable(this.state.salesRemunerations)
+      this.renderSaleRemunerationsTable(this.state.salesRemunerations)
     );
 
     return (
@@ -124,11 +141,48 @@ export class SaleRemuneration extends Component {
     );
   }
 
-  async populatePeriodData() {
-    const response = await httpClient.get(
-      "/salesRemunerations/GetAllSalesRemunerationsWithProductAndPeriod"
+  async populateSaleRemunerationData() {
+    const salesRemunerations = await httpClient
+      .get("/salesRemunerations/GetAllSalesRemunerationsWithProductAndPeriod")
+      .then((res) => res.json());
+
+    const allPeriodsResponse = await httpClient
+      .get("/period/GetAllPeriods")
+      .then((res) => res.json());
+
+    const allProductsResponse = await httpClient
+      .get("/product/GetAllProducts")
+      .then((res) => res.json());
+
+    this.setState({
+      salesRemunerations: salesRemunerations,
+      allSelectablePeriods: allPeriodsResponse,
+      allProducts: allProductsResponse,
+      periodId: allPeriodsResponse[0]?.periodId,
+      productId: allProductsResponse[0]?.productId,
+      loading: false,
+    });
+  }
+
+  async createNewSaleRemuneration(saleRemuneration) {
+    const response = await httpClient.post(
+      "/salesRemunerations/AddSalesRemuneration",
+      {
+        periodId: saleRemuneration.periodId,
+        productId: saleRemuneration.productId,
+        remuneration: this.state.remuneration,
+      }
     );
-    const data = await response.json();
-    this.setState({ salesRemunerations: data, loading: false });
+    this.setState({ loading: true });
+    this.populateSaleRemunerationData();
+  }
+
+  async deleteSaleRemunerationById(remunerationId) {
+    const response = await httpClient.delete(
+      "/salesRemunerations/DeleteSalesRemuneration",
+      remunerationId
+    );
+    this.setState({ loading: true });
+    this.populateSaleRemunerationData();
   }
 }
