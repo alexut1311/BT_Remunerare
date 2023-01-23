@@ -58,7 +58,7 @@ namespace BT_Remunerare.Tests.ControllerTests
             Response response = new()
             {
                 IsSuccesful = false,
-                ErrorMessage= errorMessage
+                ErrorMessage = errorMessage
             };
 
             PeriodDTO periodDTO = new()
@@ -70,10 +70,10 @@ namespace BT_Remunerare.Tests.ControllerTests
             _ = _periodControllerHelper.Setup(s => s.BuildDTO(It.IsAny<PeriodViewModel>())).Returns(periodDTO);
             _ = _periodLogic.Setup(s => s.AddPeriod(It.IsAny<PeriodDTO>())).Returns(response);
 
-            ObjectResult result = _periodController.AddPeriod(It.IsAny<PeriodViewModel>()) as ObjectResult;
+            ObjectResult? result = _periodController.AddPeriod(It.IsAny<PeriodViewModel>()) as ObjectResult;
             Assert.That(result.StatusCode, Is.EqualTo(500));
 
-            var resultValue = result.Value as Response;
+            Response? resultValue = result.Value as Response;
             Assert.That(resultValue.IsSuccesful, Is.EqualTo(false));
             Assert.That(resultValue.ErrorMessage, Is.EqualTo(errorMessage));
 
@@ -87,10 +87,10 @@ namespace BT_Remunerare.Tests.ControllerTests
         {
             _ = _periodLogic.Setup(s => s.AddPeriod(It.IsAny<PeriodDTO>())).Throws<NullReferenceException>();
 
-            ObjectResult result = _periodController.AddPeriod(It.IsAny<PeriodViewModel>()) as ObjectResult;
+            ObjectResult? result = _periodController.AddPeriod(It.IsAny<PeriodViewModel>()) as ObjectResult;
             Assert.That(result.StatusCode, Is.EqualTo(500));
 
-            var resultValue = result.Value as Response;
+            Response? resultValue = result.Value as Response;
             Assert.That(resultValue.IsSuccesful, Is.EqualTo(false));
             Assert.That(resultValue.ErrorMessage, Is.EqualTo("Object reference not set to an instance of an object."));
 
@@ -126,11 +126,11 @@ namespace BT_Remunerare.Tests.ControllerTests
 
             _ = _periodLogic.Setup(s => s.DeletePeriod(It.IsAny<int>())).Returns(response);
 
-            ObjectResult result = _periodController.DeletePeriod(It.IsAny<int>()) as ObjectResult;
+            ObjectResult? result = _periodController.DeletePeriod(It.IsAny<int>()) as ObjectResult;
 
             Assert.That(result.StatusCode, Is.EqualTo(500));
 
-            var resultValue = result.Value as Response;
+            Response? resultValue = result.Value as Response;
             Assert.That(resultValue.IsSuccesful, Is.EqualTo(false));
             Assert.That(resultValue.ErrorMessage, Is.EqualTo(errorMessage));
 
@@ -143,10 +143,10 @@ namespace BT_Remunerare.Tests.ControllerTests
         {
             _ = _periodLogic.Setup(s => s.DeletePeriod(It.IsAny<int>())).Throws<NullReferenceException>();
 
-            ObjectResult result = _periodController.AddPeriod(It.IsAny<PeriodViewModel>()) as ObjectResult;
+            ObjectResult? result = _periodController.AddPeriod(It.IsAny<PeriodViewModel>()) as ObjectResult;
             Assert.That(result.StatusCode, Is.EqualTo(500));
 
-            var resultValue = result.Value as Response;
+            Response? resultValue = result.Value as Response;
             Assert.That(resultValue.IsSuccesful, Is.EqualTo(false));
             Assert.That(resultValue.ErrorMessage, Is.EqualTo("Object reference not set to an instance of an object."));
 
@@ -171,7 +171,7 @@ namespace BT_Remunerare.Tests.ControllerTests
             ObjectResult? result = _periodController.GetAllPeriods() as ObjectResult;
             Assert.That(result.StatusCode, Is.EqualTo(200));
 
-            var resultValue = result.Value as List<PeriodViewModel>;
+            List<PeriodViewModel>? resultValue = result.Value as List<PeriodViewModel>;
 
             Assert.That(resultValue[0].Year, Is.EqualTo(periodViewModels[0].Year));
             Assert.That(resultValue[0].Month, Is.EqualTo(periodViewModels[0].Month));
@@ -189,7 +189,7 @@ namespace BT_Remunerare.Tests.ControllerTests
 
             Assert.That(result.StatusCode, Is.EqualTo(500));
 
-            var resultValue = result.Value as Response;
+            Response? resultValue = result.Value as Response;
             Assert.That(resultValue.IsSuccesful, Is.EqualTo(false));
             Assert.That(resultValue.ErrorMessage, Is.EqualTo("Object reference not set to an instance of an object."));
 
@@ -215,7 +215,7 @@ namespace BT_Remunerare.Tests.ControllerTests
             ObjectResult? result = _periodController.GetAllPeriodsWithSalesAndRemuneration() as ObjectResult;
             Assert.That(result.StatusCode, Is.EqualTo(200));
 
-            var resultValue = result.Value as List<PeriodViewModel>;
+            List<PeriodViewModel>? resultValue = result.Value as List<PeriodViewModel>;
 
             Assert.That(resultValue[0].Year, Is.EqualTo(periodViewModels[0].Year));
             Assert.That(resultValue[0].Month, Is.EqualTo(periodViewModels[0].Month));
@@ -233,7 +233,7 @@ namespace BT_Remunerare.Tests.ControllerTests
 
             Assert.That(result.StatusCode, Is.EqualTo(500));
 
-            var resultValue = result.Value as Response;
+            Response? resultValue = result.Value as Response;
             Assert.That(resultValue.IsSuccesful, Is.EqualTo(false));
             Assert.That(resultValue.ErrorMessage, Is.EqualTo("Object reference not set to an instance of an object."));
 
@@ -244,7 +244,7 @@ namespace BT_Remunerare.Tests.ControllerTests
         [Test]
         public void GetPeriodById_OkResult()
         {
-            PeriodViewModel periodViewModel = new PeriodViewModel()
+            PeriodViewModel periodViewModel = new()
             {
                 Year = 1,
                 Month = 1,
@@ -256,7 +256,7 @@ namespace BT_Remunerare.Tests.ControllerTests
             ObjectResult? result = _periodController.GetPeriodById(It.IsAny<int>()) as ObjectResult;
             Assert.That(result.StatusCode, Is.EqualTo(200));
 
-            var resultValue = result.Value as PeriodViewModel;
+            PeriodViewModel? resultValue = result.Value as PeriodViewModel;
 
             Assert.That(resultValue.Year, Is.EqualTo(periodViewModel.Year));
             Assert.That(resultValue.Month, Is.EqualTo(periodViewModel.Month));
@@ -274,7 +274,7 @@ namespace BT_Remunerare.Tests.ControllerTests
 
             Assert.That(result.StatusCode, Is.EqualTo(500));
 
-            var resultValue = result.Value as Response;
+            Response? resultValue = result.Value as Response;
             Assert.That(resultValue.IsSuccesful, Is.EqualTo(false));
             Assert.That(resultValue.ErrorMessage, Is.EqualTo("Object reference not set to an instance of an object."));
 
@@ -325,10 +325,10 @@ namespace BT_Remunerare.Tests.ControllerTests
             _ = _periodControllerHelper.Setup(s => s.BuildDTO(It.IsAny<PeriodViewModel>())).Returns(periodDTO);
             _ = _periodLogic.Setup(s => s.UpdatePeriod(It.IsAny<PeriodDTO>())).Returns(response);
 
-            ObjectResult result = _periodController.UpdatePeriod(It.IsAny<PeriodViewModel>()) as ObjectResult;
+            ObjectResult? result = _periodController.UpdatePeriod(It.IsAny<PeriodViewModel>()) as ObjectResult;
             Assert.That(result.StatusCode, Is.EqualTo(500));
 
-            var resultValue = result.Value as Response;
+            Response? resultValue = result.Value as Response;
             Assert.That(resultValue.IsSuccesful, Is.EqualTo(false));
             Assert.That(resultValue.ErrorMessage, Is.EqualTo(errorMessage));
 
@@ -342,10 +342,10 @@ namespace BT_Remunerare.Tests.ControllerTests
         {
             _ = _periodLogic.Setup(s => s.UpdatePeriod(It.IsAny<PeriodDTO>())).Throws<NullReferenceException>();
 
-            ObjectResult result = _periodController.UpdatePeriod(It.IsAny<PeriodViewModel>()) as ObjectResult;
+            ObjectResult? result = _periodController.UpdatePeriod(It.IsAny<PeriodViewModel>()) as ObjectResult;
             Assert.That(result.StatusCode, Is.EqualTo(500));
 
-            var resultValue = result.Value as Response;
+            Response? resultValue = result.Value as Response;
             Assert.That(resultValue.IsSuccesful, Is.EqualTo(false));
             Assert.That(resultValue.ErrorMessage, Is.EqualTo("Object reference not set to an instance of an object."));
 
