@@ -80,11 +80,17 @@ export function Home() {
           `${sale.productName}`
         );
         let vendorSaleCells = [];
-        sale.vendorSales.forEach((vendorSale, vendorSaleIndex) => {
-          if (vendorSale.vendorName === uniqueVendors[vendorSaleIndex]) {
+        uniqueVendors.sort((a, b) => a.localeCompare(b));
+        uniqueVendors.forEach((uniqueVendor, index) => {
+          const vendorSale = sale.vendorSales.find(
+            ({ vendorName }) => vendorName === uniqueVendor
+          );
+          if (vendorSale && vendorSale.totalSale > 0) {
             vendorSaleCells.push(
               createElement(TableCell, null, `${vendorSale.totalSale}`)
             );
+          } else {
+            vendorSaleCells.push(createElement(TableCell, null, ""));
           }
         });
         productRows.push(
