@@ -61,11 +61,13 @@ export class Period extends Component {
         accessorKey: "year",
         header: "An",
         size: 140,
+        type: "number",
       },
       {
         accessorKey: "month",
         header: "Luna",
         size: 140,
+        type: "number",
       },
     ];
 
