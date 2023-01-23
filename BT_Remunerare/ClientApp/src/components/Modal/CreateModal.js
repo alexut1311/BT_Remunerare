@@ -38,6 +38,7 @@ export class CreateModal extends Component {
                     key={column.accessorKey}
                     label={column.header}
                     name={column.accessorKey}
+                    type={column.type || "text"}
                     disabled={column.isDisabledToEditing}
                     onChange={(e) => this.props.setComponentState(e)}
                   />
